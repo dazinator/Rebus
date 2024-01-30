@@ -1,4 +1,4 @@
-namespace Rebus.Extensions.Configuration.InMemory;
+﻿namespace Rebus.Extensions.Configuration.InMemory;
 
 using Microsoft.Extensions.DependencyInjection;
 
@@ -8,13 +8,10 @@ public static class InMemoryRebusTransportConfigurationProviderExtensions
     {
         builder.AddTransportConfigurationProvider<InMemoryRebusTransportConfigurationProvider>(InMemoryRebusTransportConfigurationProvider.NamedServiceName);
 
-        builder.SetTransportProvider(InMemoryRebusTransportConfigurationProvider.NamedServiceName, (busName, transportConfig) =>
-        {
-            builder.Services.AddOptions<InMemoryRebusTransportOptions>(busName)
+        builder.SetTransportProvider(InMemoryRebusTransportConfigurationProvider.NamedServiceName, (busName, transportConfig) => builder.Services.AddOptions<InMemoryRebusTransportOptions>(busName)
                 .Bind(transportConfig)
                 .ValidateDataAnnotations()
-                .ValidateOnStart();
-        });
+                .ValidateOnStart());
         return builder;
     }
 }

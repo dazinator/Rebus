@@ -33,13 +33,10 @@ public class MainTests
             .Build();
 
         // Arrange
-        var services = new ServiceCollection().AddRebusFromConfiguration(configuration.GetSection("Rebus"), a =>
-        {
-            a.UseFileSystemTransportProvider()
+        var services = new ServiceCollection().AddRebusFromConfiguration(configuration.GetSection("Rebus"), a => a.UseFileSystemTransportProvider()
                 .UseInMemoryTransportProvider()
                 .UseServiceBusTransportProvider()
-                .UseSqlServerOutboxProvider();
-        });
+                .UseSqlServerOutboxProvider());
 
         await Verify(services);
     }
@@ -75,10 +72,7 @@ public class MainTests
             .Build();
 
         // Arrange
-        services.AddRebusFromConfiguration(configuration.GetSection("Rebus"), a =>
-        {
-            a.UseInMemoryTransportProvider();
-        });
+        services.AddRebusFromConfiguration(configuration.GetSection("Rebus"), a => a.UseInMemoryTransportProvider());
 
         await Verify(services);
     }

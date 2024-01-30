@@ -1,4 +1,4 @@
-namespace Rebus.Extensions.Configuration.FileSystem;
+﻿namespace Rebus.Extensions.Configuration.FileSystem;
 
 using Microsoft.Extensions.DependencyInjection;
 
@@ -8,13 +8,10 @@ public static class FileSystemRebusTransportConfigurationProviderExtensions
     {
         builder.AddTransportConfigurationProvider<FileSystemRebusTransportConfigurationProvider>(FileSystemRebusTransportConfigurationProvider.NamedServiceName);
 
-        builder.SetTransportProvider(FileSystemRebusTransportConfigurationProvider.NamedServiceName, (busName, transportConfig) =>
-        {
-            builder.Services.AddOptions<FileSystemRebusTransportOptions>(busName)
+        builder.SetTransportProvider(FileSystemRebusTransportConfigurationProvider.NamedServiceName, (busName, transportConfig) => builder.Services.AddOptions<FileSystemRebusTransportOptions>(busName)
                 .Bind(transportConfig)
                 .ValidateDataAnnotations()
-                .ValidateOnStart();
-        });
+                .ValidateOnStart());
         return builder;
     }
 }

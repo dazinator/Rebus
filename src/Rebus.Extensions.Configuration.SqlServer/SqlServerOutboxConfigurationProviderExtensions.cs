@@ -1,4 +1,4 @@
-namespace Rebus.Extensions.Configuration.SqlServer;
+﻿namespace Rebus.Extensions.Configuration.SqlServer;
 
 using Microsoft.Extensions.DependencyInjection;
 
@@ -8,13 +8,10 @@ public static class SqlServerOutboxConfigurationProviderExtensions
     {
         builder.AddOutboxConfigurationProvider<SqlServerOutboxConfigurationProvider>(SqlServerOutboxConfigurationProvider.NamedServiceName);
 
-        builder.SetOutboxProvider(SqlServerOutboxConfigurationProvider.NamedServiceName, (busName, providerConfig) =>
-        {
-            builder.Services.AddOptions<SqlServerOutboxOptions>(busName)
+        builder.SetOutboxProvider(SqlServerOutboxConfigurationProvider.NamedServiceName, (busName, providerConfig) => builder.Services.AddOptions<SqlServerOutboxOptions>(busName)
                 .Bind(providerConfig)
                 .ValidateDataAnnotations()
-                .ValidateOnStart();
-        });
+                .ValidateOnStart());
         return builder;
     }
 }

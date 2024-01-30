@@ -1,4 +1,4 @@
-namespace Rebus.Extensions.Configuration.ServiceBus;
+﻿namespace Rebus.Extensions.Configuration.ServiceBus;
 
 using Microsoft.Extensions.DependencyInjection;
 
@@ -8,13 +8,10 @@ public static class ServiceBusRebusTransportConfigurationProviderExtensions
     {
         builder.AddTransportConfigurationProvider<ServiceBusRebusTransportConfigurationProvider>(ServiceBusRebusTransportConfigurationProvider.NamedServiceName);
 
-        builder.SetTransportProvider(ServiceBusRebusTransportConfigurationProvider.NamedServiceName, (busName, transportConfig) =>
-        {
-            builder.Services.AddOptions<ServiceBusRebusTransportOptions>(busName)
+        builder.SetTransportProvider(ServiceBusRebusTransportConfigurationProvider.NamedServiceName, (busName, transportConfig) => builder.Services.AddOptions<ServiceBusRebusTransportOptions>(busName)
                 .Bind(transportConfig)
                 .ValidateDataAnnotations()
-                .ValidateOnStart();
-        });
+                .ValidateOnStart());
         return builder;
     }
 }

@@ -102,7 +102,7 @@ public static class ServiceCollectionExtensions
             RebusOptions options,
             Action<string, BusOptions> configureBus
         )
-        //  IConfiguration config, Func<RebusConfigurer, RebusConfigurer> configureRebus = null)
+    //  IConfiguration config, Func<RebusConfigurer, RebusConfigurer> configureRebus = null)
     {
         // var rebus = config.GetSection(DefaultRebusConfigKey);
         // add any in memory networks and data stores?
