@@ -29,4 +29,9 @@ public class BusOptions
 
         return $"{QueuePrefix}{Transport.QueueName}";
     }
+
+    public RebusTransportConfigurationProvider? TransportConfigurationProvider { get; set; }
+
+
+    public RebusOutboxConfigurationProvider? OutboxConfigurationProvider { get; set; }
 }

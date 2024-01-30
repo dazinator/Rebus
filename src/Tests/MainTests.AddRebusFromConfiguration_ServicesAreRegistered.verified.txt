@@ -1,61 +1,5 @@
 ﻿[
   {
-    ServiceType: NamedServiceRegistry<RebusTransportConfigurationProvider>,
-    ImplementationInstance: {
-      HasRegistrations: true
-    }
-  },
-  {
-    ServiceType: NamedServiceRegistry<RebusTransportConfigurationProvider>,
-    ImplementationFactory: {
-      Type: Func<IServiceProvider, NamedServiceRegistry<RebusTransportConfigurationProvider>>,
-      Target: ServiceCollectionExtensions.<>c__DisplayClass2_0<RebusTransportConfigurationProvider>,
-      Method: Dazinator.Extensions.DependencyInjection.NamedServiceRegistry`1[Core.Infrastructure.Rebus.RebusTransportConfigurationProvider] AddNamedServicesRegistry(System.IServiceProvider)
-    }
-  },
-  {
-    Lifetime: Scoped,
-    ServiceType: NamedServiceResolver<RebusTransportConfigurationProvider>,
-    ImplementationType: NamedServiceResolver<RebusTransportConfigurationProvider>
-  },
-  {
-    Lifetime: Scoped,
-    ServiceType: Func<string, RebusTransportConfigurationProvider>,
-    ImplementationFactory: {
-      Type: Func<IServiceProvider, Func<string, RebusTransportConfigurationProvider>>,
-      Target: ServiceCollectionExtensions.<>c__2<RebusTransportConfigurationProvider>,
-      Method: System.Func`2[System.String,Core.Infrastructure.Rebus.RebusTransportConfigurationProvider] AddNamedServicesRegistry(System.IServiceProvider)
-    }
-  },
-  {
-    ServiceType: NamedServiceRegistry<RebusOutboxConfigurationProvider>,
-    ImplementationInstance: {
-      HasRegistrations: true
-    }
-  },
-  {
-    ServiceType: NamedServiceRegistry<RebusOutboxConfigurationProvider>,
-    ImplementationFactory: {
-      Type: Func<IServiceProvider, NamedServiceRegistry<RebusOutboxConfigurationProvider>>,
-      Target: ServiceCollectionExtensions.<>c__DisplayClass2_0<RebusOutboxConfigurationProvider>,
-      Method: Dazinator.Extensions.DependencyInjection.NamedServiceRegistry`1[Core.Infrastructure.Rebus.RebusOutboxConfigurationProvider] AddNamedServicesRegistry(System.IServiceProvider)
-    }
-  },
-  {
-    Lifetime: Scoped,
-    ServiceType: NamedServiceResolver<RebusOutboxConfigurationProvider>,
-    ImplementationType: NamedServiceResolver<RebusOutboxConfigurationProvider>
-  },
-  {
-    Lifetime: Scoped,
-    ServiceType: Func<string, RebusOutboxConfigurationProvider>,
-    ImplementationFactory: {
-      Type: Func<IServiceProvider, Func<string, RebusOutboxConfigurationProvider>>,
-      Target: ServiceCollectionExtensions.<>c__2<RebusOutboxConfigurationProvider>,
-      Method: System.Func`2[System.String,Core.Infrastructure.Rebus.RebusOutboxConfigurationProvider] AddNamedServicesRegistry(System.IServiceProvider)
-    }
-  },
-  {
     ServiceType: NamedServiceRegistry<InMemNetwork>,
     ImplementationInstance: {
       HasRegistrations: false
@@ -112,6 +56,30 @@
     }
   },
   {
+    ServiceType: IPostConfigureOptions<BusOptions>,
+    ImplementationType: ConfigureFileSystemTransportConfigProviderOptions
+  },
+  {
+    ServiceType: Func<string, InMemNetwork>,
+    ImplementationInstance: {
+      Type: Func<string, InMemNetwork>,
+      Target: MainTests.<>c,
+      Method: Rebus.Transport.InMem.InMemNetwork AddRebusFromConfiguration_ServicesAreRegistered(System.String)
+    }
+  },
+  {
+    ServiceType: IPostConfigureOptions<BusOptions>,
+    ImplementationType: ConfigureInMemoryTransportConfigProviderOptions
+  },
+  {
+    ServiceType: IPostConfigureOptions<BusOptions>,
+    ImplementationType: ConfigureServiceBusTransportConfigProviderOptions
+  },
+  {
+    ServiceType: IPostConfigureOptions<BusOptions>,
+    ImplementationType: ConfigureSqlServerOutboxConfigProviderOptions
+  },
+  {
     ServiceType: IOptions<TOptions>,
     ImplementationType: UnnamedOptionsManager<TOptions>
   },
@@ -132,6 +100,23 @@
   {
     ServiceType: IOptionsMonitorCache<TOptions>,
     ImplementationType: OptionsCache<TOptions>
+  },
+  {
+    ServiceType: IOptionsChangeTokenSource<BusOptions>,
+    ImplementationInstance: {
+      Name: Default
+    }
+  },
+  {
+    ServiceType: IConfigureOptions<BusOptions>,
+    ImplementationInstance: {
+      Name: Default,
+      Action: {
+        Type: Action<BusOptions>,
+        Target: NamedConfigureFromConfigurationOptions<BusOptions>.<>c__DisplayClass1_0,
+        Method: Void .ctor(Core.BusOptions)
+      }
+    }
   },
   {
     ServiceType: IOptionsChangeTokenSource<FileSystemRebusTransportOptions>,

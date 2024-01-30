@@ -1,114 +1,34 @@
 ﻿namespace Rebus.Extensions.Configuration;
 
-using Bus;
 using Config;
 using Core;
-using Core.Infrastructure.Rebus;
 using DataBus.InMem;
 using Dazinator.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Serialization.Json;
-using Transport;
 using Transport.InMem;
 
 public static class ServiceCollectionExtensions
 {
-    /// <summary>
-    ///     Configures all rebus buses from the <see cref="IConfiguration" /> section: "Rebus".
-    /// </summary>
-    /// <param name="services"></param>
-    /// <param name="config"></param>
-    /// <param name="configureRebus"></param>
-    /// <returns></returns>
-    /// <exception cref="Exception"></exception>
-    /// <exception cref="NotSupportedException"></exception>
     public static IServiceCollection AddRebusFromConfiguration(
         this IServiceCollection services,
-        IConfiguration configSection,
-        Action<RebusConfigurationProviderOptionsBuilder> configureProviders,
-        Func<IServiceProvider, string, BusOptions, RebusConfigurer, RebusConfigurer> configureRebus = null
+        IConfiguration config,
+        Action<ConfigurationProvidersRegistrationBuilder>? configureProviders = null
     )
     {
-        // var rebus = config.GetSection(DefaultRebusConfigKey);
+        // I need to get the bus names and which is the default bus.
+
         var rebusOptions = new RebusOptions();
-        configSection.Bind(rebusOptions);
+        config.Bind(rebusOptions);
 
-        var builder = new RebusConfigurationProviderOptionsBuilder(services);
-        configureProviders?.Invoke(builder);
+        var buses = new List<string>();
+        buses.Add(rebusOptions.DefaultBus);
 
-        AddRebus(services, rebusOptions, (busName, busOptions) =>
-        {
-            var transportOptions = busOptions.Transport;
-            if (string.IsNullOrWhiteSpace(transportOptions.ProviderName))
-            {
-                throw new Exception("No transport provider configured. Check config key: Rebus:Transport:ProviderName");
-            }
-
-            var busConfig = configSection.GetSection($"Buses:{busName}");
-            var transportSection = busConfig.GetSection("Transport");
-            transportSection.Bind(transportOptions);
-
-            var transportConfig = transportSection.GetSection($"Providers:{transportOptions.ProviderName}");
-            builder.InvokeTransportProvider(transportOptions.ProviderName, busName, transportConfig);
-
-            var outboxOptions = busOptions.Outbox;
-            if (!string.IsNullOrWhiteSpace(outboxOptions?.ProviderName))
-            {
-                var outboxConfigSection = busConfig.GetSection("Outbox");
-                outboxConfigSection.Bind(outboxOptions);
-
-                var outboxProviderConfig = outboxConfigSection.GetSection($"Providers:{outboxOptions.ProviderName}");
-                builder.InvokeOutboxProvider(outboxOptions.ProviderName, busName, outboxProviderConfig);
-            }
-
-            AddRebusBus(services, busName, busOptions,
-                (sp, r) => configureRebus?.Invoke(sp, busName, busOptions, r) ?? r);
-        });
-
-        return services;
-    }
-
-    private static void ConfigureTransportFromProvider(
-        StandardConfigurer<ITransport> standardConfigurer,
-        IServiceProvider sp, string busName, BusOptions busOptions
-    )
-    {
-        using var scoped = sp.CreateScope(); // as cannot resolve named services from root scope.
-        var transportOptions = busOptions.Transport;
-        var transportConfigurer =
-            scoped.ServiceProvider.GetNamed<RebusTransportConfigurationProvider>(transportOptions.ProviderName);
-        transportConfigurer.ConfigureTransport(busName, busOptions, standardConfigurer);
-    }
-
-    private static void ConfigureOutboxFromProvider(
-        RebusConfigurer standardConfigurer,
-        IServiceProvider sp, string busName, BusOptions busOptions
-    )
-    {
-        using var scoped = sp.CreateScope(); // as cannot resolve named services from root scope.
-        var optionsProviderName = busOptions.Outbox?.ProviderName;
-        if (string.IsNullOrWhiteSpace(optionsProviderName))
-        {
-            return;
-        }
-
-        var optionsConfigurer = scoped.ServiceProvider.GetNamed<RebusOutboxConfigurationProvider>(optionsProviderName);
-        optionsConfigurer.ConfigureOutbox(busName, busOptions, standardConfigurer);
-    }
-
-    public static IServiceCollection AddRebus(
-            this IServiceCollection services,
-            RebusOptions options,
-            Action<string, BusOptions> configureBus
-        )
-    //  IConfiguration config, Func<RebusConfigurer, RebusConfigurer> configureRebus = null)
-    {
-        // var rebus = config.GetSection(DefaultRebusConfigKey);
-        // add any in memory networks and data stores?
         services.AddNamed<InMemNetwork>(n =>
         {
-            foreach (var networkName in options.InMemoryNetworks)
+            foreach (var networkName in rebusOptions.InMemoryNetworks)
             {
                 n.AddSingleton(networkName, new InMemNetwork());
             }
@@ -116,73 +36,62 @@ public static class ServiceCollectionExtensions
 
         services.AddNamed<InMemDataStore>(n =>
         {
-            foreach (var datastoreName in options.InMemoryDataStores)
+            foreach (var datastoreName in rebusOptions.InMemoryDataStores)
             {
                 n.AddSingleton(datastoreName, new InMemDataStore());
             }
         });
 
-        foreach (var bus in options.Buses)
+        var builder = new ConfigurationProvidersRegistrationBuilder(services);
+        configureProviders?.Invoke(builder);
+
+        foreach (var bus in rebusOptions.Buses)
         {
             var busName = bus.Key;
-            var busOptions = bus.Value;
-            if (bus.Key == options.DefaultBus)
-            {
-                busOptions.IsDefault = true;
-                // busName = string.Empty;
-            }
+            var busConfig = config.GetSection("Buses:" + busName);
+            services.Configure<BusOptions>(busName, busConfig);
 
-            configureBus(busName, bus.Value);
-            //  var busConfig = rebus.GetSection($"Buses:{bus}");
-            // AddBus(services, busName, busConfig, configureRebus);
+            var transport = bus.Value.Transport;
+
+            var transportSection = busConfig.GetSection("Transport");
+            var transportConfig = transportSection.GetSection($"Providers:{transport.ProviderName}");
+
+            builder.InvokeProviderConfigureHook(transport.ProviderName, ProviderSectionTypeNames.Transport, busName, transportConfig);
+
+            if (!string.IsNullOrWhiteSpace(bus.Value.Outbox?.ProviderName))
+            {
+                var outboxProviderName = bus.Value.Outbox.ProviderName;
+                var outboxConfigSection = busConfig.GetSection("Outbox");
+                var outboxProviderConfig = outboxConfigSection.GetSection($"Providers:{outboxProviderName}");
+                builder.InvokeProviderConfigureHook(outboxProviderName, ProviderSectionTypeNames.Outbox, busName, outboxProviderConfig);
+            }
+        }
+
+        var busNames = rebusOptions.Buses.Select(a => a.Key).ToArray();
+        AddRebusFromOptions(services, rebusOptions.DefaultBus, busNames);
+        return services;
+    }
+
+    public static IServiceCollection AddRebusFromOptions(this IServiceCollection services, string defaultBusName, string[] busNames)
+    {
+        // I need to get the bus names and which is the default bus.
+        foreach (var bus in busNames)
+        {
+            services.AddRebus((configure, sp) =>
+            {
+                // By resolving the options here, we can allow IConfigureOptions<BusOptions> to run which is registered by additional providers, and they can configure themselves on the BusOptions, and we can delegate aspects of the configuration to them.
+                var busOptions = ServiceProviderServiceExtensions.GetRequiredService<IOptionsMonitor<BusOptions>>(sp);
+                var namedBusOptions = busOptions.Get(bus);
+
+                configure = configure
+                    .Transport(t => namedBusOptions.TransportConfigurationProvider?.ConfigureTransport(bus, namedBusOptions, t))
+                    .Serialization(s => NewtonsoftJsonConfigurationExtensions.UseNewtonsoftJson(s));
+
+                namedBusOptions.OutboxConfigurationProvider?.ConfigureOutbox(bus, namedBusOptions, configure);
+                return configure;
+            }, key: bus, isDefaultBus: bus == defaultBusName);
         }
 
         return services;
     }
-
-    /// <summary>
-    ///     Adds a rebus <see cref="IBus" /> and configures it from matching named options.
-    /// </summary>
-    /// <param name="services"></param>
-    /// <param name="busName"></param>
-    /// <param name="busOptions"></param>
-    /// <param name="configureRebusCallback"></param>
-    /// <remarks>
-    ///     Should call  services.Configure`InMemoryRebusTransportOptions`(busName, ..) or
-    ///     services.Configure`ServiceBusRebusTransportOptions`(busName, transportConfig);
-    ///     to configure the providers transport options for the bus before calling this method
-    /// </remarks>
-    public static void AddRebusBus(
-        this IServiceCollection services,
-        string busName,
-        BusOptions busOptions,
-        Func<IServiceProvider, RebusConfigurer, RebusConfigurer> configureRebusCallback
-    ) =>
-        AddRebusBus(services, busName, busOptions.IsDefault, busOptions, configureRebusCallback);
-
-
-    private static void AddRebusBus(
-        this IServiceCollection services,
-        string busName,
-        bool isDefaultBus,
-        BusOptions busOptions,
-        Func<IServiceProvider, RebusConfigurer, RebusConfigurer> configureRebusCallback
-    ) =>
-        //var isDefaultBus = string.IsNullOrEmpty(busName || busOptions.
-        services.AddRebus((configure, sp) =>
-        {
-            // var network = sp.GetNamed<InMemNetwork>(name);
-            // var dataStore = sp.GetNamed<InMemDataStore>(name);
-
-            configure = configure
-                .Transport(t =>
-                    // based on the provider name, we want to delegate the configuration of the rebus transport to a provider that can understand how to apply its own config.
-                    ConfigureTransportFromProvider(t, sp, busName, busOptions))
-                //.DataBus(d => d.StoreInMemory(dataStore))
-                .Serialization(s => s.UseNewtonsoftJson());
-
-            ConfigureOutboxFromProvider(configure, sp, busName, busOptions);
-
-            return configureRebusCallback?.Invoke(sp, configure);
-        }, key: busName, isDefaultBus: isDefaultBus);
 }

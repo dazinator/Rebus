@@ -1,7 +1,9 @@
 ﻿namespace Tests;
 
 using System.Text.Json;
+using Core;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using Rebus.Extensions.Configuration;
 using Rebus.Extensions.Configuration.FileSystem;
 using Rebus.Extensions.Configuration.InMemory;
@@ -9,7 +11,7 @@ using Rebus.Extensions.Configuration.ServiceBus;
 using Rebus.Extensions.Configuration.SqlServer;
 using Rebus.Transport.InMem;
 
-[Documentation]
+
 [UnitTest]
 [UsesVerify]
 public class MainTests
@@ -33,50 +35,49 @@ public class MainTests
             .Build();
 
         // Arrange
-        var services = new ServiceCollection().AddRebusFromConfiguration(configuration.GetSection("Rebus"), a => a.UseFileSystemTransportProvider()
-                .UseInMemoryTransportProvider()
-                .UseServiceBusTransportProvider()
-                .UseSqlServerOutboxProvider());
+        var services = new ServiceCollection()
+            .AddRebusFromConfiguration(configuration.GetSection("Rebus"), a =>
+                a.UseFileSystemTransportProvider()
+                    .UseInMemoryTransportProvider((networkName) =>
+                    {
+                        return new InMemNetwork();
+                    })
+                    .UseServiceBusTransportProvider()
+                    .UseSqlServerOutboxProvider());
 
         await Verify(services);
     }
 
+    [Documentation]
     [Fact]
     public async Task InMemoryTransportOptions_JsonExample()
     {
-        // Register a func that can resolve a network by name, you can then refer to this name in config.
-        var services = new ServiceCollection().AddSingleton<Func<string, InMemNetwork>>((sp) => (name) =>
-        {
-            var network = new InMemNetwork();
-            return network;
-        });
-
         var options = new InMemoryRebusTransportOptions() { NetworkName = "Test", RegisterForSubscriptionStorage = true };
         var json = JsonSerializer.Serialize(options, new JsonSerializerOptions() { WriteIndented = true });
         await Verify(json);
     }
 
+    [Documentation]
     [Fact]
     public async Task InMemoryTransportOptions_UsageExample()
     {
-        // Register a func that can resolve a network by name, you can then refer to this name in config.
-        var services = new ServiceCollection().AddSingleton<Func<string, InMemNetwork>>((sp) => (name) =>
-        {
-            var network = new InMemNetwork();
-            return network;
-        });
-
         var configuration = new ConfigurationBuilder()
             .AddJsonFile("appsettings.json")
             .AddInMemoryCollection(new Dictionary<string, string>() { { "Rebus:Buses:Default:Transport:ProviderName", InMemoryRebusTransportConfigurationProvider.NamedServiceName }, })
             .Build();
 
         // Arrange
-        services.AddRebusFromConfiguration(configuration.GetSection("Rebus"), a => a.UseInMemoryTransportProvider());
+        var services = new ServiceCollection()
+            .AddRebusFromConfiguration(configuration.GetSection("Rebus"),
+                a => a.UseInMemoryTransportProvider((networkName) =>
+                {
+                    return new InMemNetwork();
+                }));
 
         await Verify(services);
     }
 
+    [Documentation]
     [Fact]
     public async Task ServiceBusOptions_JsonExample()
     {
@@ -101,6 +102,7 @@ public class MainTests
         await Verify(json);
     }
 
+    [Documentation]
     [Fact]
     public async Task FileSystemOptions_JsonExample()
     {
@@ -109,11 +111,40 @@ public class MainTests
         await Verify(json);
     }
 
+    [Documentation]
     [Fact]
     public async Task SqlOutbox_JsonExample()
     {
         var options = new SqlServerOutboxOptions() { ConnectionString = "Server=.;Database=Rebus;Trusted_Connection=True;", TableName = "Outbox" };
         var json = JsonSerializer.Serialize(options, new JsonSerializerOptions() { WriteIndented = true });
         await Verify(json);
+    }
+
+
+    [Theory]
+    [InlineData(InMemoryRebusTransportConfigurationProvider.NamedServiceName)]
+    public async Task TransportConfigurationProvider_IsConfigured(string transportProvider)
+    {
+        var configuration = new ConfigurationBuilder()
+            .AddJsonFile("appsettings.json")
+            .AddInMemoryCollection(new Dictionary<string, string>() { { "Rebus:Buses:Default:Transport:ProviderName", transportProvider }, })
+            .Build();
+
+        // Arrange
+        var services = new ServiceCollection()
+            .AddRebusFromConfiguration(configuration.GetSection("Rebus"), a =>
+                a.UseFileSystemTransportProvider()
+                    .UseInMemoryTransportProvider((networkName) =>
+                    {
+                        return new InMemNetwork();
+                    })
+                    .UseServiceBusTransportProvider());
+
+
+        var sp = services.BuildServiceProvider();
+        var options = sp.GetRequiredService<IOptionsMonitor<BusOptions>>();
+        var busOptions = options.Get("Default");
+
+        busOptions.TransportConfigurationProvider.ShouldNotBeNull();
     }
 }

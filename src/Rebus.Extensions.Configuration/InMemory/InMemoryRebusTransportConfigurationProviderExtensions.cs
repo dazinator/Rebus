@@ -1,17 +1,20 @@
 ﻿namespace Rebus.Extensions.Configuration.InMemory;
 
+using Core;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
+using Transport.InMem;
 
 public static class InMemoryRebusTransportConfigurationProviderExtensions
 {
-    public static RebusConfigurationProviderOptionsBuilder UseInMemoryTransportProvider(this RebusConfigurationProviderOptionsBuilder builder)
+    public static ConfigurationProvidersRegistrationBuilder UseInMemoryTransportProvider(this ConfigurationProvidersRegistrationBuilder builder, Func<string, InMemNetwork> inMemoryNetworkFactory)
     {
-        builder.AddTransportConfigurationProvider<InMemoryRebusTransportConfigurationProvider>(InMemoryRebusTransportConfigurationProvider.NamedServiceName);
-
-        builder.SetTransportProvider(InMemoryRebusTransportConfigurationProvider.NamedServiceName, (busName, transportConfig) => builder.Services.AddOptions<InMemoryRebusTransportOptions>(busName)
-                .Bind(transportConfig)
-                .ValidateDataAnnotations()
-                .ValidateOnStart());
+        builder.Services.AddSingleton<Func<string, InMemNetwork>>(inMemoryNetworkFactory);
+        builder.Services.AddSingleton<IPostConfigureOptions<BusOptions>, ConfigureInMemoryTransportConfigProviderOptions>();
+        builder.SetProviderConfigureHook(InMemoryRebusTransportConfigurationProvider.NamedServiceName, ProviderSectionTypeNames.Transport, (busName, transportConfig) =>  builder.Services.AddOptions<InMemoryRebusTransportOptions>(busName)
+            .Bind(transportConfig)
+            .ValidateDataAnnotations()
+            .ValidateOnStart());
         return builder;
     }
 }

@@ -1,41 +1,5 @@
 ﻿[
   {
-    ServiceType: Func<string, InMemNetwork>,
-    ImplementationFactory: {
-      Type: Func<IServiceProvider, Func<string, InMemNetwork>>,
-      Target: MainTests.<>c,
-      Method: System.Func`2[System.String,Rebus.Transport.InMem.InMemNetwork] InMemoryTransportOptions_UsageExample(System.IServiceProvider)
-    }
-  },
-  {
-    ServiceType: NamedServiceRegistry<RebusTransportConfigurationProvider>,
-    ImplementationInstance: {
-      HasRegistrations: true
-    }
-  },
-  {
-    ServiceType: NamedServiceRegistry<RebusTransportConfigurationProvider>,
-    ImplementationFactory: {
-      Type: Func<IServiceProvider, NamedServiceRegistry<RebusTransportConfigurationProvider>>,
-      Target: ServiceCollectionExtensions.<>c__DisplayClass2_0<RebusTransportConfigurationProvider>,
-      Method: Dazinator.Extensions.DependencyInjection.NamedServiceRegistry`1[Core.Infrastructure.Rebus.RebusTransportConfigurationProvider] AddNamedServicesRegistry(System.IServiceProvider)
-    }
-  },
-  {
-    Lifetime: Scoped,
-    ServiceType: NamedServiceResolver<RebusTransportConfigurationProvider>,
-    ImplementationType: NamedServiceResolver<RebusTransportConfigurationProvider>
-  },
-  {
-    Lifetime: Scoped,
-    ServiceType: Func<string, RebusTransportConfigurationProvider>,
-    ImplementationFactory: {
-      Type: Func<IServiceProvider, Func<string, RebusTransportConfigurationProvider>>,
-      Target: ServiceCollectionExtensions.<>c__2<RebusTransportConfigurationProvider>,
-      Method: System.Func`2[System.String,Core.Infrastructure.Rebus.RebusTransportConfigurationProvider] AddNamedServicesRegistry(System.IServiceProvider)
-    }
-  },
-  {
     ServiceType: NamedServiceRegistry<InMemNetwork>,
     ImplementationInstance: {
       HasRegistrations: false
@@ -92,6 +56,18 @@
     }
   },
   {
+    ServiceType: Func<string, InMemNetwork>,
+    ImplementationInstance: {
+      Type: Func<string, InMemNetwork>,
+      Target: MainTests.<>c,
+      Method: Rebus.Transport.InMem.InMemNetwork InMemoryTransportOptions_UsageExample(System.String)
+    }
+  },
+  {
+    ServiceType: IPostConfigureOptions<BusOptions>,
+    ImplementationType: ConfigureInMemoryTransportConfigProviderOptions
+  },
+  {
     ServiceType: IOptions<TOptions>,
     ImplementationType: UnnamedOptionsManager<TOptions>
   },
@@ -112,6 +88,23 @@
   {
     ServiceType: IOptionsMonitorCache<TOptions>,
     ImplementationType: OptionsCache<TOptions>
+  },
+  {
+    ServiceType: IOptionsChangeTokenSource<BusOptions>,
+    ImplementationInstance: {
+      Name: Default
+    }
+  },
+  {
+    ServiceType: IConfigureOptions<BusOptions>,
+    ImplementationInstance: {
+      Name: Default,
+      Action: {
+        Type: Action<BusOptions>,
+        Target: NamedConfigureFromConfigurationOptions<BusOptions>.<>c__DisplayClass1_0,
+        Method: Void .ctor(Core.BusOptions)
+      }
+    }
   },
   {
     ServiceType: IOptionsChangeTokenSource<InMemoryRebusTransportOptions>,

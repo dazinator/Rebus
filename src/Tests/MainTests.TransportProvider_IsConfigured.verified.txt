@@ -1,0 +1,7 @@
+﻿{
+  Transport: {
+    ProviderName: FileSystem,
+    QueueName: manager
+  },
+  TransportConfigurationProvider: {}
+}

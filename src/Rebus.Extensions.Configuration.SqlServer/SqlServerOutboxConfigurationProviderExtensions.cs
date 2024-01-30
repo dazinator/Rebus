@@ -1,17 +1,19 @@
 ﻿namespace Rebus.Extensions.Configuration.SqlServer;
 
+using Core;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 
 public static class SqlServerOutboxConfigurationProviderExtensions
 {
-    public static RebusConfigurationProviderOptionsBuilder UseSqlServerOutboxProvider(this RebusConfigurationProviderOptionsBuilder builder)
+    public static ConfigurationProvidersRegistrationBuilder UseSqlServerOutboxProvider(this ConfigurationProvidersRegistrationBuilder builder)
     {
-        builder.AddOutboxConfigurationProvider<SqlServerOutboxConfigurationProvider>(SqlServerOutboxConfigurationProvider.NamedServiceName);
+        builder.Services.AddSingleton<IPostConfigureOptions<BusOptions>, ConfigureSqlServerOutboxConfigProviderOptions>();
 
-        builder.SetOutboxProvider(SqlServerOutboxConfigurationProvider.NamedServiceName, (busName, providerConfig) => builder.Services.AddOptions<SqlServerOutboxOptions>(busName)
-                .Bind(providerConfig)
-                .ValidateDataAnnotations()
-                .ValidateOnStart());
+        builder.SetProviderConfigureHook(SqlServerOutboxConfigurationProvider.NamedServiceName, ProviderSectionTypeNames.Outbox, (busName, transportConfig) => builder.Services.AddOptions<SqlServerOutboxOptions>(busName)
+            .Bind(transportConfig)
+            .ValidateDataAnnotations()
+            .ValidateOnStart());
         return builder;
     }
 }
