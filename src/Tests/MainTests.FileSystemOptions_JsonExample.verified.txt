@@ -1,0 +1,4 @@
+﻿{
+  "BaseDirectory": "c://foo/bar",
+  "Prefetch": 10
+}

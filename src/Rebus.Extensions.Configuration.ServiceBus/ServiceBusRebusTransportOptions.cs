@@ -8,6 +8,10 @@ public class ServiceBusRebusTransportOptions
 
     public string ConnectionStringAccessKey { get; set; }
 
+    /// <summary>
+    /// Enable partitioning.
+    /// </summary>
+    /// <remarks>you'll get the exception if AutoDeleteOnIdle is set to any value (and EnablePartitioning is TRUE) https://stackoverflow.com/questions/25563145/azure-service-bus-autodeleteonidle</remarks>
     public bool? EnablePartitioning { get; set; }
 
     public int? MessagePayloadSizeLimitInBytes { get; set; }
@@ -21,6 +25,7 @@ public class ServiceBusRebusTransportOptions
     ///     if specified it must be at least five minutes.
     /// </summary>
     /// <returns></returns>
+    /// <remarks>you'll get the exception if AutoDeleteOnIdle is set to any value (and EnablePartitioning is TRUE) https://stackoverflow.com/questions/25563145/azure-service-bus-autodeleteonidle</remarks>
     public TimeSpan? AutoDeleteOnIdle { get; set; }
 
     /// <summary>

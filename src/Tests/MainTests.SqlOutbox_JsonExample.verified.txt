@@ -1,0 +1,4 @@
+﻿{
+  "ConnectionString": "Server=.;Database=Rebus;Trusted_Connection=True;",
+  "TableName": "Outbox"
+}

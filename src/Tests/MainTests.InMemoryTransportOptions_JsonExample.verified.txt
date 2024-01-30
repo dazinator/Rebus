@@ -1,0 +1,4 @@
+﻿{
+  "NetworkName": "Test",
+  "RegisterForSubscriptionStorage": true
+}

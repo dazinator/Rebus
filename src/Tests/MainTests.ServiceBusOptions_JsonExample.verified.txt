@@ -1,0 +1,16 @@
+﻿{
+  "ConnectionString": "sb://foo.bar",
+  "ConnectionStringAccessKey": "hadwa",
+  "EnablePartitioning": false,
+  "MessagePayloadSizeLimitInBytes": 50000000,
+  "DuplicateDetectionHistoryTimeWindow": "00:10:00",
+  "AutoDeleteOnIdle": "01:00:00",
+  "DefaultMessageTimeToLive": "00:01:00",
+  "MessagePeekLockDuration": "00:02:00",
+  "NumberOfMessagesToPrefetch": 1,
+  "AutomaticallyRenewPeekLock": true,
+  "UseLegacyNaming": false,
+  "AutoCreateQueues": true,
+  "CheckQueueConfiguration": true,
+  "ReceiveOperationTimeout": "00:01:00"
+}
