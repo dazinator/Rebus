@@ -14,8 +14,6 @@ using Transport.InMem;
 
 public static class ServiceCollectionExtensions
 {
-    private const string DefaultRebusConfigKey = "Rebus";
-
     /// <summary>
     ///     Configures all rebus buses from the <see cref="IConfiguration" /> section: "Rebus".
     /// </summary>
