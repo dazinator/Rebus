@@ -1,13 +1,12 @@
 ﻿namespace Rebus.Extensions.Configuration.InMemory;
 
-using Core;
 using Microsoft.Extensions.Options;
 using Transport.InMem;
 
 public class ConfigureInMemoryTransportConfigProviderOptions : IPostConfigureOptions<BusOptions>
 {
-    private readonly IOptionsMonitor<InMemoryRebusTransportOptions> _optionsMonitor;
     private readonly Func<string, InMemNetwork> _inMemNetworksFactory;
+    private readonly IOptionsMonitor<InMemoryRebusTransportOptions> _optionsMonitor;
 
     public ConfigureInMemoryTransportConfigProviderOptions(IOptionsMonitor<InMemoryRebusTransportOptions> optionsMonitor, Func<string, InMemNetwork> inMemNetworksFactory)
     {

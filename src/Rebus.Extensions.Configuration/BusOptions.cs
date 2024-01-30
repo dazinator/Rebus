@@ -1,6 +1,4 @@
-﻿namespace Core;
-
-using Infrastructure.Rebus;
+﻿namespace Rebus.Extensions.Configuration;
 
 public class BusOptions
 {
@@ -9,6 +7,11 @@ public class BusOptions
 
     public OutboxOptions Outbox { get; set; }
     internal bool IsDefault { get; set; }
+
+    public RebusTransportConfigurationProvider? TransportConfigurationProvider { get; set; }
+
+
+    public RebusOutboxConfigurationProvider? OutboxConfigurationProvider { get; set; }
 
     public string GetPrefixedQueueName(string name)
     {
@@ -29,9 +32,4 @@ public class BusOptions
 
         return $"{QueuePrefix}{Transport.QueueName}";
     }
-
-    public RebusTransportConfigurationProvider? TransportConfigurationProvider { get; set; }
-
-
-    public RebusOutboxConfigurationProvider? OutboxConfigurationProvider { get; set; }
 }

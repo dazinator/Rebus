@@ -1,7 +1,6 @@
 ﻿namespace Rebus.Extensions.Configuration;
 
 using Config;
-using Core;
 using DataBus.InMem;
 using Dazinator.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
@@ -80,12 +79,12 @@ public static class ServiceCollectionExtensions
             services.AddRebus((configure, sp) =>
             {
                 // By resolving the options here, we can allow IConfigureOptions<BusOptions> to run which is registered by additional providers, and they can configure themselves on the BusOptions, and we can delegate aspects of the configuration to them.
-                var busOptions = ServiceProviderServiceExtensions.GetRequiredService<IOptionsMonitor<BusOptions>>(sp);
+                var busOptions = sp.GetRequiredService<IOptionsMonitor<BusOptions>>();
                 var namedBusOptions = busOptions.Get(bus);
 
                 configure = configure
                     .Transport(t => namedBusOptions.TransportConfigurationProvider?.ConfigureTransport(bus, namedBusOptions, t))
-                    .Serialization(s => NewtonsoftJsonConfigurationExtensions.UseNewtonsoftJson(s));
+                    .Serialization(s => s.UseNewtonsoftJson());
 
                 namedBusOptions.OutboxConfigurationProvider?.ConfigureOutbox(bus, namedBusOptions, configure);
                 return configure;

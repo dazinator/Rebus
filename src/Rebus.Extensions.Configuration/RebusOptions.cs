@@ -1,4 +1,4 @@
-﻿namespace Core;
+﻿namespace Rebus.Extensions.Configuration;
 
 public class RebusOptions
 {

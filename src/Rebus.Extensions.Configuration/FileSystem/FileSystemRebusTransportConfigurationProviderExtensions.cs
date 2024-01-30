@@ -1,6 +1,5 @@
 ﻿namespace Rebus.Extensions.Configuration.FileSystem;
 
-using Core;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 

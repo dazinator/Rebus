@@ -1,8 +1,6 @@
 ﻿namespace Rebus.Extensions.Configuration.FileSystem;
 
 using Config;
-using Core;
-using Core.Infrastructure.Rebus;
 using Microsoft.Extensions.Options;
 using Transport;
 using Transport.FileSystem;

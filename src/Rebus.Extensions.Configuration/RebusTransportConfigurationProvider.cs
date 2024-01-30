@@ -1,7 +1,7 @@
-﻿namespace Core.Infrastructure.Rebus;
+﻿namespace Rebus.Extensions.Configuration;
 
-using global::Rebus.Config;
-using global::Rebus.Transport;
+using Rebus.Config;
+using Rebus.Transport;
 
 public abstract class RebusTransportConfigurationProvider
 {

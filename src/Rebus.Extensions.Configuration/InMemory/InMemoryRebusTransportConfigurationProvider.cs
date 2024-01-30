@@ -1,8 +1,6 @@
 ﻿namespace Rebus.Extensions.Configuration.InMemory;
 
 using Config;
-using Core;
-using Core.Infrastructure.Rebus;
 using Microsoft.Extensions.Options;
 using Transport;
 using Transport.InMem;

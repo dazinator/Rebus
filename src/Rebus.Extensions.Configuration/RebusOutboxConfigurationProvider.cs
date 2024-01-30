@@ -1,6 +1,6 @@
-﻿namespace Core.Infrastructure.Rebus;
+﻿namespace Rebus.Extensions.Configuration;
 
-using global::Rebus.Config;
+using Rebus.Config;
 
 public abstract class RebusOutboxConfigurationProvider
 {

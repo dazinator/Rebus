@@ -7,12 +7,9 @@ public class ConfigurationProvidersRegistrationBuilder
 {
     private readonly Dictionary<string, Action<string, IConfiguration>> _transportConfigurationProviderCallbacks = new();
 
-    public IServiceCollection Services { get; }
+    public ConfigurationProvidersRegistrationBuilder(IServiceCollection serviceCollection) => Services = serviceCollection;
 
-    public ConfigurationProvidersRegistrationBuilder(IServiceCollection serviceCollection)
-    {
-        Services = serviceCollection;
-    }
+    public IServiceCollection Services { get; }
 
     public ConfigurationProvidersRegistrationBuilder SetProviderConfigureHook(string providerName, ProviderSectionTypeNames sectionType, Action<string, IConfiguration> configureHook)
     {

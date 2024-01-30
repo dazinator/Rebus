@@ -1,4 +1,4 @@
-﻿namespace Core.Infrastructure.Rebus;
+﻿namespace Rebus.Extensions.Configuration;
 
 public class TransportOptions
 {

@@ -1,6 +1,5 @@
 ﻿namespace Rebus.Extensions.Configuration.ServiceBus;
 
-using Core;
 using FileSystem;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;

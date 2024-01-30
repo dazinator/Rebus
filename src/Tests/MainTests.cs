@@ -1,7 +1,6 @@
 ﻿namespace Tests;
 
 using System.Text.Json;
-using Core;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using Rebus.Extensions.Configuration;
@@ -10,7 +9,6 @@ using Rebus.Extensions.Configuration.InMemory;
 using Rebus.Extensions.Configuration.ServiceBus;
 using Rebus.Extensions.Configuration.SqlServer;
 using Rebus.Transport.InMem;
-
 
 [UnitTest]
 [UsesVerify]
@@ -38,7 +36,7 @@ public class MainTests
         var services = new ServiceCollection()
             .AddRebusFromConfiguration(configuration.GetSection("Rebus"), a =>
                 a.UseFileSystemTransportProvider()
-                    .UseInMemoryTransportProvider((networkName) =>
+                    .UseInMemoryTransportProvider(networkName =>
                     {
                         return new InMemNetwork();
                     })
@@ -52,8 +50,8 @@ public class MainTests
     [Fact]
     public async Task InMemoryTransportOptions_JsonExample()
     {
-        var options = new InMemoryRebusTransportOptions() { NetworkName = "Test", RegisterForSubscriptionStorage = true };
-        var json = JsonSerializer.Serialize(options, new JsonSerializerOptions() { WriteIndented = true });
+        var options = new InMemoryRebusTransportOptions { NetworkName = "Test", RegisterForSubscriptionStorage = true };
+        var json = JsonSerializer.Serialize(options, new JsonSerializerOptions { WriteIndented = true });
         await Verify(json);
     }
 
@@ -63,13 +61,13 @@ public class MainTests
     {
         var configuration = new ConfigurationBuilder()
             .AddJsonFile("appsettings.json")
-            .AddInMemoryCollection(new Dictionary<string, string>() { { "Rebus:Buses:Default:Transport:ProviderName", InMemoryRebusTransportConfigurationProvider.NamedServiceName }, })
+            .AddInMemoryCollection(new Dictionary<string, string> { { "Rebus:Buses:Default:Transport:ProviderName", InMemoryRebusTransportConfigurationProvider.NamedServiceName } })
             .Build();
 
         // Arrange
         var services = new ServiceCollection()
             .AddRebusFromConfiguration(configuration.GetSection("Rebus"),
-                a => a.UseInMemoryTransportProvider((networkName) =>
+                a => a.UseInMemoryTransportProvider(networkName =>
                 {
                     return new InMemNetwork();
                 }));
@@ -81,7 +79,7 @@ public class MainTests
     [Fact]
     public async Task ServiceBusOptions_JsonExample()
     {
-        var options = new ServiceBusRebusTransportOptions()
+        var options = new ServiceBusRebusTransportOptions
         {
             ConnectionString = "sb://foo.bar",
             EnablePartitioning = false,
@@ -98,7 +96,7 @@ public class MainTests
             NumberOfMessagesToPrefetch = 1,
             MessagePayloadSizeLimitInBytes = 50000000
         };
-        var json = JsonSerializer.Serialize(options, new JsonSerializerOptions() { WriteIndented = true });
+        var json = JsonSerializer.Serialize(options, new JsonSerializerOptions { WriteIndented = true });
         await Verify(json);
     }
 
@@ -106,8 +104,8 @@ public class MainTests
     [Fact]
     public async Task FileSystemOptions_JsonExample()
     {
-        var options = new FileSystemRebusTransportOptions() { Prefetch = 10, BaseDirectory = "c://foo/bar", };
-        var json = JsonSerializer.Serialize(options, new JsonSerializerOptions() { WriteIndented = true });
+        var options = new FileSystemRebusTransportOptions { Prefetch = 10, BaseDirectory = "c://foo/bar" };
+        var json = JsonSerializer.Serialize(options, new JsonSerializerOptions { WriteIndented = true });
         await Verify(json);
     }
 
@@ -115,8 +113,8 @@ public class MainTests
     [Fact]
     public async Task SqlOutbox_JsonExample()
     {
-        var options = new SqlServerOutboxOptions() { ConnectionString = "Server=.;Database=Rebus;Trusted_Connection=True;", TableName = "Outbox" };
-        var json = JsonSerializer.Serialize(options, new JsonSerializerOptions() { WriteIndented = true });
+        var options = new SqlServerOutboxOptions { ConnectionString = "Server=.;Database=Rebus;Trusted_Connection=True;", TableName = "Outbox" };
+        var json = JsonSerializer.Serialize(options, new JsonSerializerOptions { WriteIndented = true });
         await Verify(json);
     }
 
@@ -127,14 +125,14 @@ public class MainTests
     {
         var configuration = new ConfigurationBuilder()
             .AddJsonFile("appsettings.json")
-            .AddInMemoryCollection(new Dictionary<string, string>() { { "Rebus:Buses:Default:Transport:ProviderName", transportProvider }, })
+            .AddInMemoryCollection(new Dictionary<string, string> { { "Rebus:Buses:Default:Transport:ProviderName", transportProvider } })
             .Build();
 
         // Arrange
         var services = new ServiceCollection()
             .AddRebusFromConfiguration(configuration.GetSection("Rebus"), a =>
                 a.UseFileSystemTransportProvider()
-                    .UseInMemoryTransportProvider((networkName) =>
+                    .UseInMemoryTransportProvider(networkName =>
                     {
                         return new InMemNetwork();
                     })

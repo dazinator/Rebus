@@ -5,12 +5,12 @@ Add `Rebus` to your application and configure it purely from `IConfiguration`.
 The scope of what can be configured (more being added):-
 
 - A single or multiple buses, including which is the "default"
-  - Transport
-    - In Memory
-    - File System
-    - Service Bus
-  - Outbox
-    - Sql Server
+    - Transport
+        - In Memory
+        - File System
+        - Service Bus
+    - Outbox
+        - Sql Server
 
 ```csharp
 
@@ -72,7 +72,9 @@ The scope of what can be configured (more being added):-
 
 ### In Memory Transport
 
-You can configure buses to use in memory networks, but you first have to register a func to return the network for a given name which can then be used in the config.
+You can configure buses to use in memory networks, but you first have to register a func to return the network for a
+given name which can then be used in the config.
+
 ```csharp
 var services = new ServiceCollection().AddSingleton<Func<string, InMemNetwork>>((sp) => (name) =>
 {

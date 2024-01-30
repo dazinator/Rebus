@@ -2,8 +2,6 @@
 
 using Config;
 using Config.Outbox;
-using Core;
-using Core.Infrastructure.Rebus;
 using Microsoft.Extensions.Options;
 
 public class SqlServerOutboxConfigurationProvider : RebusOutboxConfigurationProvider

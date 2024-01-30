@@ -1,8 +1,6 @@
 ﻿namespace Rebus.Extensions.Configuration.ServiceBus;
 
 using Config;
-using Core;
-using Core.Infrastructure.Rebus;
 using Microsoft.Extensions.Options;
 using Transport;
 
