@@ -1,44 +1,45 @@
 ﻿namespace Tests;
 
+using Microsoft.Extensions.Configuration;
+using Rebus.Extensions.Configuration;
+using Rebus.Extensions.Configuration.FileSystem;
+using Rebus.Extensions.Configuration.InMemory;
+using Rebus.Extensions.Configuration.ServiceBus;
+using Rebus.Extensions.Configuration.SqlServer;
+
 [UnitTest]
 [UsesVerify]
 public class MainTests
 {
-
     public MainTests(ITestOutputHelper outputHelper)
     {
         OutputHelper = outputHelper;
+        DefaultServices = new ServiceCollection()
+            .AddLogging(builder => builder.AddXUnit(OutputHelper));
     }
 
-    [Fact]
-    public async Task ExecuteAsync_ResultsInSomething()
-    {
-        // Arrange
-        var services = new ServiceCollection()
-                     .AddLogging((builder) => builder.AddXUnit(OutputHelper))
-                     .AddSingleton<TestSubject>();
-
-        var sut = services
-            .BuildServiceProvider()
-            .GetRequiredService<TestSubject>();
-
-        // Act
-        int actual = sut.GetResult();
-
-        // Assert
-        actual.ShouldBe(1);
-
-    }
+    public IServiceCollection DefaultServices { get; set; }
 
     public ITestOutputHelper OutputHelper { get; }
 
-}
-
-
-public class TestSubject
-{
-    public int GetResult()
+    [Fact]
+    public async Task Usage_CanConfigureRebusFromConfiguration()
     {
-        return 1;
-    }  
+        var configuration = new ConfigurationBuilder()
+            .AddJsonFile("appsettings.json")
+            .Build();
+
+        // Arrange
+        var services = new ServiceCollection().AddRebusFromConfiguration(configuration.GetSection("Rebus"), a =>
+        {
+            a.UseFileSystemTransportProvider()
+                .UseInMemoryTransportProvider()
+                .UseServiceBusTransportProvider()
+                .UseSqlServerOutboxProvider();
+        });
+
+        await Verify(services);
+        //await using var sp = services.BuildServiceProvider();
+        //sp.StartRebus();
+    }
 }

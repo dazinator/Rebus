@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Rebus.Extensions.Configuration\Rebus.Extensions.Configuration.csproj"/>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Rebus.AzureServiceBus" Version="10.0.0-alpha01"/>
+  </ItemGroup>
+
+</Project>

@@ -9,23 +9,35 @@
     <IsTestProject>true</IsTestProject>
   </PropertyGroup>
 
-  <ItemGroup>   
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />   
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.5.0" />
-    <PackageReference Include="Shouldly" Version="4.2.1" />
-    <PackageReference Include="MartinCostello.Logging.XUnit" Version="0.3.0" />
-    <PackageReference Include="Testcontainers" Version="3.0.0" />  
-    <PackageReference Include="xunit" Version="2.4.2" />
-    <PackageReference Include="xunit.categories" Version="2.0.6" />
-    <PackageReference Include="Verify.Xunit" Version="20.4.0" />
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0"/>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.5.0"/>
+    <PackageReference Include="Shouldly" Version="4.2.1"/>
+    <PackageReference Include="MartinCostello.Logging.XUnit" Version="0.3.0"/>
+    <PackageReference Include="Testcontainers" Version="3.0.0"/>
+    <PackageReference Include="xunit" Version="2.4.2"/>
+    <PackageReference Include="xunit.categories" Version="2.0.6"/>
+    <PackageReference Include="Verify.Xunit" Version="20.4.0"/>
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.5">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
-    </PackageReference>  
+    </PackageReference>
     <PackageReference Include="coverlet.collector" Version="3.2.0">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Rebus.Extensions.Configuration.ServiceBus\Rebus.Extensions.Configuration.ServiceBus.csproj"/>
+    <ProjectReference Include="..\Rebus.Extensions.Configuration.SqlServer\Rebus.Extensions.Configuration.SqlServer.csproj"/>
+    <ProjectReference Include="..\Rebus.Extensions.Configuration\Rebus.Extensions.Configuration.csproj"/>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

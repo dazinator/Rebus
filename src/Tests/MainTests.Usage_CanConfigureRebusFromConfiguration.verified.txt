@@ -1,0 +1,261 @@
+﻿[
+  {
+    ServiceType: NamedServiceRegistry<RebusTransportConfigurationProvider>,
+    ImplementationInstance: {
+      HasRegistrations: true
+    }
+  },
+  {
+    ServiceType: NamedServiceRegistry<RebusTransportConfigurationProvider>,
+    ImplementationFactory: {
+      Type: Func<IServiceProvider, NamedServiceRegistry<RebusTransportConfigurationProvider>>,
+      Target: ServiceCollectionExtensions.<>c__DisplayClass2_0<RebusTransportConfigurationProvider>,
+      Method: Dazinator.Extensions.DependencyInjection.NamedServiceRegistry`1[Core.Infrastructure.Rebus.RebusTransportConfigurationProvider] AddNamedServicesRegistry(System.IServiceProvider)
+    }
+  },
+  {
+    Lifetime: Scoped,
+    ServiceType: NamedServiceResolver<RebusTransportConfigurationProvider>,
+    ImplementationType: NamedServiceResolver<RebusTransportConfigurationProvider>
+  },
+  {
+    Lifetime: Scoped,
+    ServiceType: Func<string, RebusTransportConfigurationProvider>,
+    ImplementationFactory: {
+      Type: Func<IServiceProvider, Func<string, RebusTransportConfigurationProvider>>,
+      Target: ServiceCollectionExtensions.<>c__2<RebusTransportConfigurationProvider>,
+      Method: System.Func`2[System.String,Core.Infrastructure.Rebus.RebusTransportConfigurationProvider] AddNamedServicesRegistry(System.IServiceProvider)
+    }
+  },
+  {
+    ServiceType: NamedServiceRegistry<RebusOutboxConfigurationProvider>,
+    ImplementationInstance: {
+      HasRegistrations: true
+    }
+  },
+  {
+    ServiceType: NamedServiceRegistry<RebusOutboxConfigurationProvider>,
+    ImplementationFactory: {
+      Type: Func<IServiceProvider, NamedServiceRegistry<RebusOutboxConfigurationProvider>>,
+      Target: ServiceCollectionExtensions.<>c__DisplayClass2_0<RebusOutboxConfigurationProvider>,
+      Method: Dazinator.Extensions.DependencyInjection.NamedServiceRegistry`1[Core.Infrastructure.Rebus.RebusOutboxConfigurationProvider] AddNamedServicesRegistry(System.IServiceProvider)
+    }
+  },
+  {
+    Lifetime: Scoped,
+    ServiceType: NamedServiceResolver<RebusOutboxConfigurationProvider>,
+    ImplementationType: NamedServiceResolver<RebusOutboxConfigurationProvider>
+  },
+  {
+    Lifetime: Scoped,
+    ServiceType: Func<string, RebusOutboxConfigurationProvider>,
+    ImplementationFactory: {
+      Type: Func<IServiceProvider, Func<string, RebusOutboxConfigurationProvider>>,
+      Target: ServiceCollectionExtensions.<>c__2<RebusOutboxConfigurationProvider>,
+      Method: System.Func`2[System.String,Core.Infrastructure.Rebus.RebusOutboxConfigurationProvider] AddNamedServicesRegistry(System.IServiceProvider)
+    }
+  },
+  {
+    ServiceType: NamedServiceRegistry<InMemNetwork>,
+    ImplementationInstance: {
+      HasRegistrations: false
+    }
+  },
+  {
+    ServiceType: NamedServiceRegistry<InMemNetwork>,
+    ImplementationFactory: {
+      Type: Func<IServiceProvider, NamedServiceRegistry<InMemNetwork>>,
+      Target: ServiceCollectionExtensions.<>c__DisplayClass2_0<InMemNetwork>,
+      Method: Dazinator.Extensions.DependencyInjection.NamedServiceRegistry`1[Rebus.Transport.InMem.InMemNetwork] AddNamedServicesRegistry(System.IServiceProvider)
+    }
+  },
+  {
+    Lifetime: Scoped,
+    ServiceType: NamedServiceResolver<InMemNetwork>,
+    ImplementationType: NamedServiceResolver<InMemNetwork>
+  },
+  {
+    Lifetime: Scoped,
+    ServiceType: Func<string, InMemNetwork>,
+    ImplementationFactory: {
+      Type: Func<IServiceProvider, Func<string, InMemNetwork>>,
+      Target: ServiceCollectionExtensions.<>c__2<InMemNetwork>,
+      Method: System.Func`2[System.String,Rebus.Transport.InMem.InMemNetwork] AddNamedServicesRegistry(System.IServiceProvider)
+    }
+  },
+  {
+    ServiceType: NamedServiceRegistry<InMemDataStore>,
+    ImplementationInstance: {
+      HasRegistrations: false
+    }
+  },
+  {
+    ServiceType: NamedServiceRegistry<InMemDataStore>,
+    ImplementationFactory: {
+      Type: Func<IServiceProvider, NamedServiceRegistry<InMemDataStore>>,
+      Target: ServiceCollectionExtensions.<>c__DisplayClass2_0<InMemDataStore>,
+      Method: Dazinator.Extensions.DependencyInjection.NamedServiceRegistry`1[Rebus.DataBus.InMem.InMemDataStore] AddNamedServicesRegistry(System.IServiceProvider)
+    }
+  },
+  {
+    Lifetime: Scoped,
+    ServiceType: NamedServiceResolver<InMemDataStore>,
+    ImplementationType: NamedServiceResolver<InMemDataStore>
+  },
+  {
+    Lifetime: Scoped,
+    ServiceType: Func<string, InMemDataStore>,
+    ImplementationFactory: {
+      Type: Func<IServiceProvider, Func<string, InMemDataStore>>,
+      Target: ServiceCollectionExtensions.<>c__2<InMemDataStore>,
+      Method: System.Func`2[System.String,Rebus.DataBus.InMem.InMemDataStore] AddNamedServicesRegistry(System.IServiceProvider)
+    }
+  },
+  {
+    ServiceType: IOptions<TOptions>,
+    ImplementationType: UnnamedOptionsManager<TOptions>
+  },
+  {
+    Lifetime: Scoped,
+    ServiceType: IOptionsSnapshot<TOptions>,
+    ImplementationType: OptionsManager<TOptions>
+  },
+  {
+    ServiceType: IOptionsMonitor<TOptions>,
+    ImplementationType: OptionsMonitor<TOptions>
+  },
+  {
+    Lifetime: Transient,
+    ServiceType: IOptionsFactory<TOptions>,
+    ImplementationType: OptionsFactory<TOptions>
+  },
+  {
+    ServiceType: IOptionsMonitorCache<TOptions>,
+    ImplementationType: OptionsCache<TOptions>
+  },
+  {
+    ServiceType: IOptionsChangeTokenSource<FileSystemRebusTransportOptions>,
+    ImplementationInstance: {
+      Name: Default
+    }
+  },
+  {
+    ServiceType: IConfigureOptions<FileSystemRebusTransportOptions>,
+    ImplementationInstance: {
+      Name: Default,
+      Action: {
+        Type: Action<FileSystemRebusTransportOptions>,
+        Target: NamedConfigureFromConfigurationOptions<FileSystemRebusTransportOptions>.<>c__DisplayClass1_0,
+        Method: Void .ctor(Rebus.Extensions.Configuration.FileSystem.FileSystemRebusTransportOptions)
+      }
+    }
+  },
+  {
+    ServiceType: IValidateOptions<FileSystemRebusTransportOptions>,
+    ImplementationInstance: {
+      Name: Default
+    }
+  },
+  {
+    ServiceType: IHostedService,
+    ImplementationType: ValidationHostedService
+  },
+  {
+    Lifetime: Transient,
+    ServiceType: IConfigureOptions<ValidatorOptions>,
+    ImplementationFactory: {
+      Type: Func<IServiceProvider, IConfigureOptions<ValidatorOptions>>,
+      Target: OptionsBuilder<ValidatorOptions>.<>c__DisplayClass9_0<IOptionsMonitor<FileSystemRebusTransportOptions>>,
+      Method: Microsoft.Extensions.Options.IConfigureOptions`1[Microsoft.Extensions.DependencyInjection.ValidatorOptions] Configure(System.IServiceProvider)
+    }
+  },
+  {
+    ServiceType: RebusDisposalHelper,
+    ImplementationType: RebusDisposalHelper
+  },
+  {
+    ServiceType: RebusInitializer,
+    ImplementationFactory: {
+      Type: Func<IServiceProvider, RebusInitializer>,
+      Target: ServiceCollectionExtensions.<>c__DisplayClass1_0,
+      Method: Rebus.ServiceProvider.Internals.RebusInitializer AddRebus(System.IServiceProvider)
+    }
+  },
+  {
+    ServiceType: DefaultBusInstance,
+    ImplementationFactory: {
+      Type: Func<IServiceProvider, DefaultBusInstance>,
+      Target: ServiceCollectionExtensions.<>c,
+      Method: Rebus.ServiceProvider.Internals.DefaultBusInstance AddRebus(System.IServiceProvider)
+    }
+  },
+  {
+    ServiceType: IHostedService,
+    ImplementationFactory: {
+      Type: Func<IServiceProvider, IHostedService>,
+      Target: ServiceCollectionExtensions.<>c,
+      Method: Microsoft.Extensions.Hosting.IHostedService AddRebus(System.IServiceProvider)
+    }
+  },
+  {
+    ServiceType: RebusResolver,
+    ImplementationInstance: {}
+  },
+  {
+    ServiceType: ServiceProviderBusRegistry,
+    ImplementationInstance: {}
+  },
+  {
+    ServiceType: IBusRegistry,
+    ImplementationFactory: {
+      Type: Func<IServiceProvider, IBusRegistry>,
+      Target: ServiceCollectionExtensions.<>c,
+      Method: Rebus.ServiceProvider.IBusRegistry AddRebus(System.IServiceProvider)
+    }
+  },
+  {
+    Lifetime: Transient,
+    ServiceType: IBus,
+    ImplementationFactory: {
+      Type: Func<IServiceProvider, IBus>,
+      Target: ServiceCollectionExtensions.<>c,
+      Method: Rebus.Bus.IBus AddRebus(System.IServiceProvider)
+    }
+  },
+  {
+    Lifetime: Transient,
+    ServiceType: ISyncBus,
+    ImplementationFactory: {
+      Type: Func<IServiceProvider, ISyncBus>,
+      Target: ServiceCollectionExtensions.<>c,
+      Method: Rebus.Bus.Advanced.ISyncBus AddRebus(System.IServiceProvider)
+    }
+  },
+  {
+    Lifetime: Transient,
+    ServiceType: IDataBus,
+    ImplementationFactory: {
+      Type: Func<IServiceProvider, IDataBus>,
+      Target: ServiceCollectionExtensions.<>c,
+      Method: Rebus.DataBus.IDataBus AddRebus(System.IServiceProvider)
+    }
+  },
+  {
+    Lifetime: Transient,
+    ServiceType: IMessageContext,
+    ImplementationFactory: {
+      Type: Func<IServiceProvider, IMessageContext>,
+      Target: ServiceCollectionExtensions.<>c,
+      Method: Rebus.Pipeline.IMessageContext AddRebus(System.IServiceProvider)
+    }
+  },
+  {
+    Lifetime: Transient,
+    ServiceType: BusLifetimeEvents,
+    ImplementationFactory: {
+      Type: Func<IServiceProvider, BusLifetimeEvents>,
+      Target: ServiceCollectionExtensions.<>c,
+      Method: Rebus.Bus.BusLifetimeEvents AddRebus(System.IServiceProvider)
+    }
+  }
+]

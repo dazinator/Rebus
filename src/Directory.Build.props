@@ -1,5 +1,5 @@
 <Project>
- <PropertyGroup>
+  <PropertyGroup>
     <!-- Optional: Publish the repository URL in the built .nupkg (in the NuSpec <Repository> element) -->
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <!-- Optional: Embed source files that are not tracked by the source control manager in the PDB -->
@@ -12,7 +12,7 @@
    Nuget.org v3 seems to support snupkg's but GitHub feeds don't appear to.
    If using nuget.org feeds you may which to comment this out, or consider not generating symbols packages when publishing to github feeds.-->
     <DebugType>embedded</DebugType>
- </PropertyGroup>
+  </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1">
       <PrivateAssets>all</PrivateAssets>
@@ -20,4 +20,4 @@
     </PackageReference>
   </ItemGroup>
 </Project>
-   
+
