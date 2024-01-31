@@ -152,17 +152,32 @@ public class MainTests
     {
         var configuration = new ConfigurationBuilder()
             .AddJsonFile("appsettings.json")
-
             .Build();
+
+
+        bool globalCallbackCalled = false;
+        bool busSpecificCallbackCalled = false;
 
         // Arrange
         var services = new ServiceCollection()
             .AddRebusFromConfiguration(configuration.GetSection("Rebus"), a =>
                 a.UseFileSystemTransportProvider()
-                    .UseConfigureRebusCallback("Default", (configure, sp) =>
+                    .UseConfigureCallback((configure, sp) =>
                     {
+                        globalCallbackCalled = true;
+                        configure.Sagas(b => b.UseFilesystem("./foo"));
+                        return configure;
+                    })
+                    .UseConfigureCallback("Default", (configure, sp) =>
+                    {
+                        busSpecificCallbackCalled = true;
                         configure.Sagas(b => b.UseFilesystem("./foo"));
                         return configure;
                     }));
+
+        var sp = services.BuildServiceProvider();
+
+        globalCallbackCalled.ShouldBeTrue();
+        busSpecificCallbackCalled.ShouldBeTrue();
     }
 }

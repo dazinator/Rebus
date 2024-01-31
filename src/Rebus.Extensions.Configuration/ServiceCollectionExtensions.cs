@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Serialization.Json;
 using Transport.InMem;
+using Options = Config.Options;
 
 public static class ServiceCollectionExtensions
 {
@@ -89,8 +90,11 @@ public static class ServiceCollectionExtensions
                 namedBusOptions.OutboxConfigurationProvider?.ConfigureOutbox(bus, namedBusOptions, configure);
 
                 var callbackOptions = sp.GetRequiredService<IOptionsMonitor<RebusConfigureActions>>();
-                var callbacks = callbackOptions.Get(bus);
+                var globalCallbacks = callbackOptions.CurrentValue;
+                globalCallbacks?.InvokeCallbacks(configure, sp);
 
+                var thisBusCallbacks = callbackOptions.Get(bus);
+                thisBusCallbacks?.InvokeCallbacks(configure, sp);
 
                 return configure;
             }, key: bus, isDefaultBus: bus == defaultBusName);

@@ -31,11 +31,21 @@ public class ConfigurationProvidersRegistrationBuilder
         throw new NotSupportedException($"Invalid provider: {providerName}");
     }
 
-    public void UseConfigureRebusCallback(string busName, Func<RebusConfigurer, IServiceProvider, RebusConfigurer> configureBus)
+    public ConfigurationProvidersRegistrationBuilder UseConfigureCallback(string busName, Func<RebusConfigurer, IServiceProvider, RebusConfigurer> configureBus)
     {
         Services.Configure<RebusConfigureActions>(busName, (a) =>
         {
             a.Add(configureBus);
         });
+        return this;
+    }
+
+    public ConfigurationProvidersRegistrationBuilder UseConfigureCallback(Func<RebusConfigurer, IServiceProvider, RebusConfigurer> configureBus)
+    {
+        Services.Configure<RebusConfigureActions>((a) =>
+        {
+            a.Add(configureBus);
+        });
+        return this;
     }
 }

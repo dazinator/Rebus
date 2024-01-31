@@ -22,14 +22,24 @@ The scope of what can be configured (more being added):-
         var services = new ServiceCollection()
             .AddRebusFromConfiguration(configuration.GetSection("Rebus"), a =>
         {
-            a.UseFileSystemTransportProvider()
-                .UseInMemoryTransportProvider(networkName =>
+            a.UseFileSystemTransportProvider() // allows "FileSystem" transport provider to be used in config.
+                .UseInMemoryTransportProvider(networkName => // allows "InMemory" transport provider to be used in config.
                 {
                     // return a network for the given name specified in the config
                     return new InMemNetwork();
                 })
-                .UseServiceBusTransportProvider()
-                .UseSqlServerOutboxProvider();
+                .UseServiceBusTransportProvider() // allows "ServiceBus" transport provider to be used in config.
+                .UseSqlServerOutboxProvider() // allows "SqlServer" outbox provider to be used in config.
+                .UseConfigureCallback((configure, sp) => // allows you to register a callback to configure the rebus bus with any custom logic prior prior to it being added to the DI container. This callback is invoked for each bus configured.
+                {
+                    configure.Sagas(b => b.UseFilesystem("./foo"));
+                    return configure;
+                })
+                .UseConfigureCallback("Default", (configure, sp) => // allows you to register a callback to configure the rebus bus with any custom logic prior prior to it being added to the DI container. This callback is invoked only for a configured bus with the specified name.
+                {
+                    configure.Sagas(b => b.UseFilesystem("./bar"));
+                    return configure;
+                }));
         });
 
 

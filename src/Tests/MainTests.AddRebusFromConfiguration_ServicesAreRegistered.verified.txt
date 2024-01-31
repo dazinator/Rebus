@@ -114,7 +114,7 @@
       Action: {
         Type: Action<BusOptions>,
         Target: NamedConfigureFromConfigurationOptions<BusOptions>.<>c__DisplayClass1_0,
-        Method: Void .ctor(Core.BusOptions)
+        Method: Void .ctor(Rebus.Extensions.Configuration.BusOptions)
       }
     }
   },
