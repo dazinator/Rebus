@@ -87,6 +87,11 @@ public static class ServiceCollectionExtensions
                     .Serialization(s => s.UseNewtonsoftJson());
 
                 namedBusOptions.OutboxConfigurationProvider?.ConfigureOutbox(bus, namedBusOptions, configure);
+
+                var callbackOptions = sp.GetRequiredService<IOptionsMonitor<RebusConfigureActions>>();
+                var callbacks = callbackOptions.Get(bus);
+
+
                 return configure;
             }, key: bus, isDefaultBus: bus == defaultBusName);
         }

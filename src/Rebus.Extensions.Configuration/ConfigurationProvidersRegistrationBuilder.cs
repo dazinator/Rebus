@@ -1,5 +1,6 @@
 ﻿namespace Rebus.Extensions.Configuration;
 
+using Config;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -28,5 +29,13 @@ public class ConfigurationProvidersRegistrationBuilder
         }
 
         throw new NotSupportedException($"Invalid provider: {providerName}");
+    }
+
+    public void UseConfigureRebusCallback(string busName, Func<RebusConfigurer, IServiceProvider, RebusConfigurer> configureBus)
+    {
+        Services.Configure<RebusConfigureActions>(busName, (a) =>
+        {
+            a.Add(configureBus);
+        });
     }
 }

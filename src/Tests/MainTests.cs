@@ -8,6 +8,7 @@ using Rebus.Extensions.Configuration.FileSystem;
 using Rebus.Extensions.Configuration.InMemory;
 using Rebus.Extensions.Configuration.ServiceBus;
 using Rebus.Extensions.Configuration.SqlServer;
+using Rebus.Persistence.FileSystem;
 using Rebus.Transport.InMem;
 
 [UnitTest]
@@ -144,5 +145,24 @@ public class MainTests
         var busOptions = options.Get("Default");
 
         busOptions.TransportConfigurationProvider.ShouldNotBeNull();
+    }
+
+    [Fact]
+    public void Can_Configure_Using_Callback()
+    {
+        var configuration = new ConfigurationBuilder()
+            .AddJsonFile("appsettings.json")
+
+            .Build();
+
+        // Arrange
+        var services = new ServiceCollection()
+            .AddRebusFromConfiguration(configuration.GetSection("Rebus"), a =>
+                a.UseFileSystemTransportProvider()
+                    .UseConfigureRebusCallback("Default", (configure, sp) =>
+                    {
+                        configure.Sagas(b => b.UseFilesystem("./foo"));
+                        return configure;
+                    }));
     }
 }
