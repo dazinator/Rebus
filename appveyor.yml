@@ -12,9 +12,9 @@ build:
   verbosity: detailed
 build_script:
   # - cmd: dotnet format ./src -v normal --verify-no-changes
-  - cmd: dotnet restore src --disable-parallel
-  - cmd: dotnet build src -c Release --disable-parallel
-  - cmd: dotnet pack src -c Release --output %APPVEYOR_BUILD_FOLDER%/artifacts/
+  - cmd: dotnet restore src -p:InformationalVersion=%GitVersion_InformationalVersion% -p:PackageVersion=%GitVersion_SemVer%
+  - cmd: dotnet build src --no-restore -c Release -p:ContinuousIntegrationBuild=true -p:InformationalVersion=%GitVersion_InformationalVersion% -p:PackageVersion=%GitVersion_SemVer%
+  - cmd: dotnet pack src --no-build -c Release -p:PackageVersion=%GitVersion_SemVer% --output %APPVEYOR_BUILD_FOLDER%/artifacts/
 artifacts:
   - path: artifacts/*
 deploy:
