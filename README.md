@@ -23,12 +23,46 @@ The scope of what can be configured (more being added):-
             .AddRebusFromConfiguration(configuration.GetSection("Rebus"), a =>
         {
             a.UseFileSystemTransportProvider()
-                .UseInMemoryTransportProvider()
+                .UseInMemoryTransportProvider(networkName =>
+                {
+                    // return a network for the given name specified in the config
+                    return new InMemNetwork();
+                })
                 .UseServiceBusTransportProvider()
                 .UseSqlServerOutboxProvider();
         });
 
 
+```
+
+Example appsettings.json - note the "FileSystem" provider is in use, the ServiceBus and InMemory provider sections are there as examples. See their full options below.
+
+```json
+{
+  "Rebus": {
+    "DefaultBus": "Default",
+    "Buses": {
+      "Default": {
+        "Transport": {
+          "QueueName": "manager",
+          "ProviderName": "FileSystem",
+          "Providers": {
+            "FileSystem": {
+              "BaseDirectory": "{PWD}/transport/"
+            },
+            "ServiceBus": {
+              "AutomaticallyRenewPeekLock": true
+            },
+            "InMemory": {
+              "NetworkName": "Test",
+              "RegisterForSubscriptionStorage": true
+            }
+          }
+        }
+      }
+    }
+  }
+}
 ```
 
 ## appsettings.json examples
@@ -72,15 +106,15 @@ The scope of what can be configured (more being added):-
 
 ### In Memory Transport
 
-You can configure buses to use in memory networks, but you first have to register a func to return the network for a
-given name which can then be used in the config.
+You can configure buses to use in memory networks, but you must provider a factory function to return the network for a
+given name specified in the config.
 
 ```csharp
-var services = new ServiceCollection().AddSingleton<Func<string, InMemNetwork>>((sp) => (name) =>
-{
-  var network = new InMemNetwork();
-  return network;
-});
+ .UseInMemoryTransportProvider(networkName =>
+                {
+                    // return a network for the given name specified in the config
+                    return new InMemNetwork();
+                })
 ```
 
 ```json
@@ -140,7 +174,7 @@ var services = new ServiceCollection().AddSingleton<Func<string, InMemNetwork>>(
       "Default": {
         "Transport": {
           "QueueName": "test",
-          "ProviderName": "FileSystem", // InMemory, ServiceBus etc
+          "ProviderName": "FileSystem", 
           "Providers": {
             "FileSystem": {
               "BaseDirectory": "{PWD}/transport/"
@@ -151,7 +185,7 @@ var services = new ServiceCollection().AddSingleton<Func<string, InMemNetwork>>(
       "Another": {
         "Transport": {
           "QueueName": "another",
-          "ProviderName": "FileSystem", // InMemory, ServiceBus etc
+          "ProviderName": "FileSystem", 
           "Providers": {
             "FileSystem": {
               "BaseDirectory": "{PWD}/transport/"
