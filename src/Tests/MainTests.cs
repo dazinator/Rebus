@@ -3,6 +3,7 @@
 using System.Text.Json;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
+using Rebus.Config;
 using Rebus.Extensions.Configuration;
 using Rebus.Extensions.Configuration.FileSystem;
 using Rebus.Extensions.Configuration.InMemory;
@@ -171,12 +172,12 @@ public class MainTests
                     .UseConfigureCallback("Default", (configure, sp) =>
                     {
                         busSpecificCallbackCalled = true;
-                        configure.Sagas(b => b.UseFilesystem("./foo"));
                         return configure;
                     }));
 
         var sp = services.BuildServiceProvider();
 
+        sp.StartRebus();
         globalCallbackCalled.ShouldBeTrue();
         busSpecificCallbackCalled.ShouldBeTrue();
     }

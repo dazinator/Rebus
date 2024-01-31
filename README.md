@@ -37,7 +37,7 @@ The scope of what can be configured (more being added):-
                 })
                 .UseConfigureCallback("Default", (configure, sp) => // allows you to register a callback to configure the rebus bus with any custom logic prior prior to it being added to the DI container. This callback is invoked only for a configured bus with the specified name.
                 {
-                    configure.Sagas(b => b.UseFilesystem("./bar"));
+                    // configure.Sagas(b => b.UseFilesystem("./bar"));
                     return configure;
                 }));
         });
