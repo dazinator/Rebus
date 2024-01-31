@@ -28,10 +28,10 @@ public class BusConfigurationContext
     /// The rebus configurer being used to configure the bus. You can perform custom rebus configuration with this using rebus native api.
     /// </summary>
     public RebusConfigurer Configurer { get; set; }
-    // /// <summary>
-    // /// Any options that have been configured and applied already to the rebus configurer. Changing these is not recommended as changes here will not be applied.
-    // /// </summary>
-    // public BusOptions ConfiguredOptions { get; set; }
+    /// <summary>
+    /// Any options that have been configured and applied already to the rebus configurer. Changing these is not recommended as changes here will not be applied.
+    /// </summary>
+    public BusOptions ConfiguredOptions { get; set; }
     /// <summary>
     /// The name of the rebus bus being configured.
     /// </summary>

@@ -92,7 +92,7 @@ public static class ServiceCollectionExtensions
                 var callbackOptions = sp.GetRequiredService<IOptionsMonitor<RebusConfigureActions>>();
                 var globalCallbacks = callbackOptions.CurrentValue;
 
-                var context = new BusConfigurationContext() { Configurer = configure, Name = bus, ServiceProvider = sp };
+                var context = new BusConfigurationContext() { Configurer = configure, Name = bus, ServiceProvider = sp, ConfiguredOptions = namedBusOptions};
                 globalCallbacks?.InvokeCallbacks(context);
 
                 var thisBusCallbacks = callbackOptions.Get(bus);
