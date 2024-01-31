@@ -163,16 +163,15 @@ public class MainTests
         var services = new ServiceCollection()
             .AddRebusFromConfiguration(configuration.GetSection("Rebus"), a =>
                 a.UseFileSystemTransportProvider()
-                    .UseConfigureCallback((configure, sp) =>
+                    .UseConfigureCallback((context) =>
                     {
                         globalCallbackCalled = true;
-                        configure.Sagas(b => b.UseFilesystem("./foo"));
-                        return configure;
+                        return context.Configurer.Sagas(b => b.UseFilesystem("./foo"));
                     })
-                    .UseConfigureCallback("Default", (configure, sp) =>
+                    .UseConfigureCallback("Default", (context) =>
                     {
                         busSpecificCallbackCalled = true;
-                        return configure;
+                        return context.Configurer;
                     }));
 
         var sp = services.BuildServiceProvider();

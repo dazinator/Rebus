@@ -31,7 +31,7 @@ public class ConfigurationProvidersRegistrationBuilder
         throw new NotSupportedException($"Invalid provider: {providerName}");
     }
 
-    public ConfigurationProvidersRegistrationBuilder UseConfigureCallback(string busName, Func<RebusConfigurer, IServiceProvider, RebusConfigurer> configureBus)
+    public ConfigurationProvidersRegistrationBuilder UseConfigureCallback(string busName, Func<BusConfigurationContext, RebusConfigurer> configureBus)
     {
         Services.Configure<RebusConfigureActions>(busName, (a) =>
         {
@@ -40,7 +40,7 @@ public class ConfigurationProvidersRegistrationBuilder
         return this;
     }
 
-    public ConfigurationProvidersRegistrationBuilder UseConfigureCallback(Func<RebusConfigurer, IServiceProvider, RebusConfigurer> configureBus)
+    public ConfigurationProvidersRegistrationBuilder UseConfigureCallback(Func<BusConfigurationContext, RebusConfigurer> configureBus)
     {
         Services.Configure<RebusConfigureActions>((a) =>
         {

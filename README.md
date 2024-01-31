@@ -30,15 +30,15 @@ The scope of what can be configured (more being added):-
                 })
                 .UseServiceBusTransportProvider() // allows "ServiceBus" transport provider to be used in config.
                 .UseSqlServerOutboxProvider() // allows "SqlServer" outbox provider to be used in config.
-                .UseConfigureCallback((configure, sp) => // allows you to register a callback to configure the rebus bus with any custom logic prior prior to it being added to the DI container. This callback is invoked for each bus configured.
+                .UseConfigureCallback((context) =>
                 {
-                    configure.Sagas(b => b.UseFilesystem("./foo"));
-                    return configure;
+                    globalCallbackCalled = true;
+                    return context.Configurer.Sagas(b => b.UseFilesystem("./foo"));
                 })
-                .UseConfigureCallback("Default", (configure, sp) => // allows you to register a callback to configure the rebus bus with any custom logic prior prior to it being added to the DI container. This callback is invoked only for a configured bus with the specified name.
+                .UseConfigureCallback("Default", (context) =>
                 {
-                    // configure.Sagas(b => b.UseFilesystem("./bar"));
-                    return configure;
+                    busSpecificCallbackCalled = true;
+                    return context.Configurer;
                 }));
         });
 
