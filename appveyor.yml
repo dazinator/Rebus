@@ -12,14 +12,14 @@ build:
   verbosity: detailed
 build_script:
   # - cmd: dotnet format ./src -v normal --verify-no-changes
-  - cmd: dotnet restore src --disable-parallel
-  - cmd: dotnet build src -c Release --disable-parallel
-  - cmd: dotnet pack src -c Release --output %APPVEYOR_BUILD_FOLDER%/artifacts/
+  - cmd: dotnet restore src -p:InformationalVersion=%GitVersion_InformationalVersion% -p:PackageVersion=%GitVersion_SemVer%
+  - cmd: dotnet build src --no-restore -c Release -p:ContinuousIntegrationBuild=true -p:InformationalVersion=%GitVersion_InformationalVersion% -p:PackageVersion=%GitVersion_SemVer%
+  - cmd: dotnet pack src --no-build -c Release -p:PackageVersion=%GitVersion_SemVer% --output %APPVEYOR_BUILD_FOLDER%/artifacts/
 artifacts:
   - path: artifacts/*
 deploy:
   provider: NuGet
   api_key:
-    secure: u8JpW5kkti8pMi+ra2QcXTJPhkHCA8pkKSiiZOJbcS/vFVHNvF3W8qw1Fy2If6a7
+    secure: DwF9sQq5V/csRiBuNHKr3a1dBWzJS3GVJBcrKR0ZvePDGcQ47666Jgd6xqU5fvnl
   skip_symbols: false
   artifact: /.*\.nupkg/
