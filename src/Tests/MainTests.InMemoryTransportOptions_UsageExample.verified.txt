@@ -1,5 +1,56 @@
 ﻿[
   {
+    ServiceType: Func<string, InMemNetwork>,
+    ImplementationInstance: {
+      Type: Func<string, InMemNetwork>,
+      Target: MainTests.<>c,
+      Method: Rebus.Transport.InMem.InMemNetwork InMemoryTransportOptions_UsageExample(System.String)
+    }
+  },
+  {
+    ServiceType: IPostConfigureOptions<BusOptions>,
+    ImplementationType: ConfigureInMemoryTransportConfigProviderOptions
+  },
+  {
+    ServiceType: IOptions<TOptions>,
+    ImplementationType: UnnamedOptionsManager<TOptions>
+  },
+  {
+    Lifetime: Scoped,
+    ServiceType: IOptionsSnapshot<TOptions>,
+    ImplementationType: OptionsManager<TOptions>
+  },
+  {
+    ServiceType: IOptionsMonitor<TOptions>,
+    ImplementationType: OptionsMonitor<TOptions>
+  },
+  {
+    Lifetime: Transient,
+    ServiceType: IOptionsFactory<TOptions>,
+    ImplementationType: OptionsFactory<TOptions>
+  },
+  {
+    ServiceType: IOptionsMonitorCache<TOptions>,
+    ImplementationType: OptionsCache<TOptions>
+  },
+  {
+    ServiceType: IOptionsChangeTokenSource<RebusOptions>,
+    ImplementationInstance: {
+      Name: 
+    }
+  },
+  {
+    ServiceType: IConfigureOptions<RebusOptions>,
+    ImplementationInstance: {
+      Name: ,
+      Action: {
+        Type: Action<RebusOptions>,
+        Target: NamedConfigureFromConfigurationOptions<RebusOptions>.<>c__DisplayClass1_0,
+        Method: Void .ctor(Rebus.Extensions.Configuration.RebusOptions)
+      }
+    }
+  },
+  {
     ServiceType: NamedServiceRegistry<InMemNetwork>,
     ImplementationInstance: {
       HasRegistrations: false
@@ -54,40 +105,6 @@
       Target: ServiceCollectionExtensions.<>c__2<InMemDataStore>,
       Method: System.Func`2[System.String,Rebus.DataBus.InMem.InMemDataStore] AddNamedServicesRegistry(System.IServiceProvider)
     }
-  },
-  {
-    ServiceType: Func<string, InMemNetwork>,
-    ImplementationInstance: {
-      Type: Func<string, InMemNetwork>,
-      Target: MainTests.<>c,
-      Method: Rebus.Transport.InMem.InMemNetwork InMemoryTransportOptions_UsageExample(System.String)
-    }
-  },
-  {
-    ServiceType: IPostConfigureOptions<BusOptions>,
-    ImplementationType: ConfigureInMemoryTransportConfigProviderOptions
-  },
-  {
-    ServiceType: IOptions<TOptions>,
-    ImplementationType: UnnamedOptionsManager<TOptions>
-  },
-  {
-    Lifetime: Scoped,
-    ServiceType: IOptionsSnapshot<TOptions>,
-    ImplementationType: OptionsManager<TOptions>
-  },
-  {
-    ServiceType: IOptionsMonitor<TOptions>,
-    ImplementationType: OptionsMonitor<TOptions>
-  },
-  {
-    Lifetime: Transient,
-    ServiceType: IOptionsFactory<TOptions>,
-    ImplementationType: OptionsFactory<TOptions>
-  },
-  {
-    ServiceType: IOptionsMonitorCache<TOptions>,
-    ImplementationType: OptionsCache<TOptions>
   },
   {
     ServiceType: IOptionsChangeTokenSource<BusOptions>,

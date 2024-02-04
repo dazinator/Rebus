@@ -36,14 +36,17 @@ public class MainTests
 
         // Arrange
         var services = new ServiceCollection()
-            .AddRebusFromConfiguration(configuration.GetSection("Rebus"), a =>
-                a.UseFileSystemTransportProvider()
-                    .UseInMemoryTransportProvider(networkName =>
+            .AddRebusConfigurationProviders((a =>
+            {
+                a.FileSystemTransport()
+                    .InMemoryTransport(networkName =>
                     {
                         return new InMemNetwork();
                     })
-                    .UseServiceBusTransportProvider()
-                    .UseSqlServerOutboxProvider());
+                    .ServiceBusTransport()
+                    .SqlServerOutbox();
+            })).AddRebus(configuration.GetSection("Rebus"));
+
 
         await Verify(services);
     }
@@ -68,11 +71,14 @@ public class MainTests
 
         // Arrange
         var services = new ServiceCollection()
-            .AddRebusFromConfiguration(configuration.GetSection("Rebus"),
-                a => a.UseInMemoryTransportProvider(networkName =>
-                {
-                    return new InMemNetwork();
-                }));
+            .AddRebusConfigurationProviders((a =>
+            {
+                    a.InMemoryTransport(networkName =>
+                    {
+                        return new InMemNetwork();
+                    });
+            })).AddRebus(configuration.GetSection("Rebus"));
+
 
         await Verify(services);
     }
@@ -132,14 +138,15 @@ public class MainTests
 
         // Arrange
         var services = new ServiceCollection()
-            .AddRebusFromConfiguration(configuration.GetSection("Rebus"), a =>
-                a.UseFileSystemTransportProvider()
-                    .UseInMemoryTransportProvider(networkName =>
+            .AddRebusConfigurationProviders((a =>
+            {
+                a.FileSystemTransport()
+                    .InMemoryTransport(networkName =>
                     {
                         return new InMemNetwork();
                     })
-                    .UseServiceBusTransportProvider());
-
+                    .ServiceBusTransport();
+            })).AddRebus(configuration.GetSection("Rebus"));
 
         var sp = services.BuildServiceProvider();
         var options = sp.GetRequiredService<IOptionsMonitor<BusOptions>>();
@@ -161,8 +168,9 @@ public class MainTests
 
         // Arrange
         var services = new ServiceCollection()
-            .AddRebusFromConfiguration(configuration.GetSection("Rebus"), a =>
-                a.UseFileSystemTransportProvider()
+            .AddRebusConfigurationProviders((a =>
+            {
+                a.FileSystemTransport()
                     .UseConfigureCallback((context) =>
                     {
                         globalCallbackCalled = true;
@@ -172,7 +180,9 @@ public class MainTests
                     {
                         busSpecificCallbackCalled = true;
                         return context.Configurer;
-                    }));
+                    });
+            })).AddRebus(configuration.GetSection("Rebus"));
+
 
         var sp = services.BuildServiceProvider();
 

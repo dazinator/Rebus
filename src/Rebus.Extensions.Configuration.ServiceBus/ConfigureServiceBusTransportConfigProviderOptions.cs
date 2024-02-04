@@ -1,7 +1,6 @@
-﻿namespace Rebus.Extensions.Configuration.FileSystem;
+﻿namespace Rebus.Extensions.Configuration.ServiceBus;
 
 using Microsoft.Extensions.Options;
-using ServiceBus;
 
 public class ConfigureServiceBusTransportConfigProviderOptions : IPostConfigureOptions<BusOptions>
 {

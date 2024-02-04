@@ -20,27 +20,27 @@ The scope of what can be configured (more being added):-
 
 
         var services = new ServiceCollection()
-            .AddRebusFromConfiguration(configuration.GetSection("Rebus"), a =>
-        {
-            a.UseFileSystemTransportProvider() // allows "FileSystem" transport provider to be used in config.
-                .UseInMemoryTransportProvider(networkName => // allows "InMemory" transport provider to be used in config.
-                {
-                    // return a network for the given name specified in the config
-                    return new InMemNetwork();
-                })
-                .UseServiceBusTransportProvider() // allows "ServiceBus" transport provider to be used in config.
-                .UseSqlServerOutboxProvider() // allows "SqlServer" outbox provider to be used in config.
-                .UseConfigureCallback((context) =>
-                {
-                    globalCallbackCalled = true;
-                    return context.Configurer.Sagas(b => b.UseFilesystem("./foo"));
-                })
-                .UseConfigureCallback("Default", (context) =>
-                {
-                    busSpecificCallbackCalled = true;
-                    return context.Configurer;
-                }));
-        });
+             .AddRebusConfigurationProviders((a =>
+            {
+                a.FileSystemTransport()  // allows "FileSystem" transport provider to be specified in config.
+                    .InMemoryTransport(networkName => // allows "InMemory" transport provider to be specified in config.
+                    {
+                       // return a network for the given name specified in the config                    
+                        return new InMemNetwork();
+                    })
+                    .ServiceBusTransport() // allows "ServiceBus" transport provider to be specified in config.
+                    .SqlServerOutbox() // allows "SqlServer" outbox provider to be specified in config.
+                    .UseConfigureCallback((context) =>
+                    {
+                        globalCallbackCalled = true;
+                        return context.Configurer.Sagas(b => b.UseFilesystem("./foo"));
+                    })
+                    .UseConfigureCallback("Default", (context) =>
+                    {
+                        busSpecificCallbackCalled = true;
+                        return context.Configurer;
+                    })
+            })).AddRebus(configuration.GetSection("Rebus"));            
 
 
 ```
