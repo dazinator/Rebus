@@ -51,59 +51,19 @@
     }
   },
   {
-    ServiceType: NamedServiceRegistry<InMemNetwork>,
-    ImplementationInstance: {
-      HasRegistrations: false
-    }
-  },
-  {
-    ServiceType: NamedServiceRegistry<InMemNetwork>,
-    ImplementationFactory: {
-      Type: Func<IServiceProvider, NamedServiceRegistry<InMemNetwork>>,
-      Target: ServiceCollectionExtensions.<>c__DisplayClass2_0<InMemNetwork>,
-      Method: Dazinator.Extensions.DependencyInjection.NamedServiceRegistry`1[Rebus.Transport.InMem.InMemNetwork] AddNamedServicesRegistry(System.IServiceProvider)
-    }
-  },
-  {
-    Lifetime: Scoped,
-    ServiceType: NamedServiceResolver<InMemNetwork>,
-    ImplementationType: NamedServiceResolver<InMemNetwork>
-  },
-  {
-    Lifetime: Scoped,
     ServiceType: Func<string, InMemNetwork>,
     ImplementationFactory: {
       Type: Func<IServiceProvider, Func<string, InMemNetwork>>,
-      Target: ServiceCollectionExtensions.<>c__2<InMemNetwork>,
-      Method: System.Func`2[System.String,Rebus.Transport.InMem.InMemNetwork] AddNamedServicesRegistry(System.IServiceProvider)
+      Target: RebusRegistrationBuilder.<>c,
+      Method: System.Func`2[System.String,Rebus.Transport.InMem.InMemNetwork] AddRebus(System.IServiceProvider)
     }
   },
   {
-    ServiceType: NamedServiceRegistry<InMemDataStore>,
-    ImplementationInstance: {
-      HasRegistrations: false
-    }
-  },
-  {
-    ServiceType: NamedServiceRegistry<InMemDataStore>,
-    ImplementationFactory: {
-      Type: Func<IServiceProvider, NamedServiceRegistry<InMemDataStore>>,
-      Target: ServiceCollectionExtensions.<>c__DisplayClass2_0<InMemDataStore>,
-      Method: Dazinator.Extensions.DependencyInjection.NamedServiceRegistry`1[Rebus.DataBus.InMem.InMemDataStore] AddNamedServicesRegistry(System.IServiceProvider)
-    }
-  },
-  {
-    Lifetime: Scoped,
-    ServiceType: NamedServiceResolver<InMemDataStore>,
-    ImplementationType: NamedServiceResolver<InMemDataStore>
-  },
-  {
-    Lifetime: Scoped,
     ServiceType: Func<string, InMemDataStore>,
     ImplementationFactory: {
       Type: Func<IServiceProvider, Func<string, InMemDataStore>>,
-      Target: ServiceCollectionExtensions.<>c__2<InMemDataStore>,
-      Method: System.Func`2[System.String,Rebus.DataBus.InMem.InMemDataStore] AddNamedServicesRegistry(System.IServiceProvider)
+      Target: RebusRegistrationBuilder.<>c,
+      Method: System.Func`2[System.String,Rebus.DataBus.InMem.InMemDataStore] AddRebus(System.IServiceProvider)
     }
   },
   {

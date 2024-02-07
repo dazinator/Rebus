@@ -21,4 +21,6 @@ public static class ServiceBusRebusTransportConfigurationProviderExtensions
         builder.Services.AddSingleton<IPostConfigureOptions<BusOptions>, ConfigureServiceBusTransportConfigProviderOptions>();
         return builder;
     }
+
+
 }

@@ -1,8 +1,8 @@
 ﻿namespace Rebus.Extensions.Configuration;
 
+using System.Collections.Concurrent;
 using Config;
 using DataBus.InMem;
-using Dazinator.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -30,20 +30,40 @@ public class RebusRegistrationBuilder
         var buses = new List<string>();
         buses.Add(rebusOptions.DefaultBus);
 
-        services.AddNamed<InMemNetwork>(n =>
+        services.AddSingleton<Func<string, InMemNetwork>>(s =>
         {
-            foreach (var networkName in rebusOptions.InMemoryNetworks)
+            var options = s.GetRequiredService<IOptionsMonitor<RebusOptions>>();
+            var cache = new ConcurrentDictionary<string, InMemNetwork>();
+            var factory = new Func<string, InMemNetwork>((name) =>
             {
-                n.AddSingleton(networkName, new InMemNetwork());
-            }
+                var current = options.CurrentValue;
+                if (!current.InMemoryNetworks?.Contains(name) ?? false)
+                {
+                    throw new Exception($"Network not found {name}");
+                }
+
+                var instance = cache.GetOrAdd(name, new InMemNetwork());
+                return instance;
+            });
+            return factory;
         });
 
-        services.AddNamed<InMemDataStore>(n =>
+        services.AddSingleton<Func<string, InMemDataStore>>(s =>
         {
-            foreach (var datastoreName in rebusOptions.InMemoryDataStores)
+            var options = s.GetRequiredService<IOptionsMonitor<RebusOptions>>();
+            var cache = new ConcurrentDictionary<string, InMemDataStore>();
+            var factory = new Func<string, InMemDataStore>((name) =>
             {
-                n.AddSingleton(datastoreName, new InMemDataStore());
-            }
+                var current = options.CurrentValue;
+                if (!current.InMemoryDataStores?.Contains(name) ?? false)
+                {
+                    throw new Exception($"InMemDataStore not found {name}");
+                }
+
+                var instance = cache.GetOrAdd(name, new InMemDataStore());
+                return instance;
+            });
+            return factory;
         });
 
         foreach (var bus in rebusOptions.Buses)
@@ -161,6 +181,12 @@ public class ConfigurationProvidersRegistrationBuilder
         {
             a.Add(configureBus);
         });
+        return this;
+    }
+
+    public ConfigurationProvidersRegistrationBuilder ConfigureBusOptions(string busName, Action<BusOptions> configure)
+    {
+        Services.Configure<BusOptions>(busName, configure);
         return this;
     }
 
