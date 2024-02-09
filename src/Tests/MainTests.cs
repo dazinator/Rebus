@@ -129,7 +129,9 @@ public class MainTests
 
     [Theory]
     [InlineData(InMemoryRebusTransportConfigurationProvider.NamedServiceName)]
-    public async Task TransportConfigurationProvider_IsConfigured(string transportProvider)
+    [InlineData(FileSystemRebusTransportConfigurationProvider.NamedServiceName)]
+    [InlineData(ServiceBusRebusTransportConfigurationProvider.NamedServiceName)]
+    public void TransportConfigurationProvider_IsConfigured(string transportProvider)
     {
         var configuration = new ConfigurationBuilder()
             .AddJsonFile("appsettings.json")
