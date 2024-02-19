@@ -10,7 +10,7 @@ public class ConfigureSqlServerOutboxConfigProviderOptions : IPostConfigureOptio
 
     public void PostConfigure(string name, BusOptions options)
     {
-        if (options.Transport?.ProviderName == SqlServerOutboxConfigurationProvider.NamedServiceName)
+        if (options.Outbox?.ProviderName == SqlServerOutboxConfigurationProvider.NamedServiceName)
         {
             options.OutboxConfigurationProvider = new SqlServerOutboxConfigurationProvider(_optionsMonitor);
         }
